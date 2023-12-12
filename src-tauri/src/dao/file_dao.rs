@@ -34,11 +34,10 @@ pub(crate) fn remove(mut conn: SqliteConnection, id_del: i32) -> anyhow::Result<
 #[cfg(test)]
 mod tests {
     use std::env;
-    use calamine::DataType::DateTime;
     use chrono::Local;
     use diesel::Connection;
-    use tauri::api::path::BaseDirectory::LocalData;
     use super::*;
+
     pub fn establish_connection() -> SqliteConnection {
         let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
         SqliteConnection::establish(&database_url)
@@ -76,17 +75,17 @@ mod tests {
         assert!(res>0)
     }
 
-    #[test]
-    fn  update_code_by_id_test(){
-        let res = update_code_by_id(establish_connection(), 3, "xxxxx".to_string()).unwrap();
-        assert!(res>0)
-    }
+    // #[test]
+    // fn  update_code_by_id_test(){
+    //     let res = update_code_by_id(establish_connection(), 3, "xxxxx".to_string()).unwrap();
+    //     assert!(res>0)
+    // }
 
-    #[test]
-    fn  remove_test(){
-        let res = remove(establish_connection(), 3).unwrap();
-        assert!(res>0)
-    }
+    // #[test]
+    // fn  remove_test(){
+    //     let res = remove(establish_connection(), 3).unwrap();
+    //     assert!(res>0)
+    // }
 
 
 

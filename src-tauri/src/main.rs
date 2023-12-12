@@ -7,7 +7,9 @@ mod dao;
 
 use anyhow::anyhow;
 use calamine::{open_workbook, Reader, Xlsx};
+use diesel::{SqliteConnection, Connection};
 use core::result::Result::Ok;
+use std::{env, sync::Mutex};
 use serde_json::{json, Map, Number, Value};
 
 
@@ -17,8 +19,20 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
+pub fn establish_connection() -> SqliteConnection {
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    SqliteConnection::establish(&database_url)
+        .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
+}
+
+struct DbConnection {
+    db: Mutex<Option<SqliteConnection>>,
+}
+
 fn main() {
+    let conn = establish_connection();
     tauri::Builder::default()
+        .manage(DbConnection{db: Mutex::new(Option::Some(conn))})
         .invoke_handler(tauri::generate_handler![greet])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
