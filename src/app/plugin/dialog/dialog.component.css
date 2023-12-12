@@ -1,0 +1,3 @@
+.custome-input{
+    @apply  w-full  p-1.5 outline-none text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-orange-700 text-sm dark:bg-[rgb(30,30,30)] dark:text-[rgb(189,189,189)] 
+ }

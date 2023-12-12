@@ -1,0 +1,4 @@
+<div #topView class=" bg-[#1E1F22] h-full">
+    <ngx-monaco-editor class="my-code-editor" #ngxMonacoEditor [options]="editorOptions" [(ngModel)]="code"
+        (onInit)="onInit($event)"></ngx-monaco-editor>
+</div>

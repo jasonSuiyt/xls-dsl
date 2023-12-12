@@ -1,0 +1,16 @@
+.custome-input{
+    @apply  w-full  p-1.5 outline-none text-gray-900  ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset focus:ring-orange-700 text-sm dark:bg-[rgb(30,30,30)] dark:text-[rgb(189,189,189)] 
+ }
+
+ .file-selected{
+    @apply bg-[rgb(224,226,239)] dark:bg-[rgb(48,48,53)]
+ }
+
+ .contentMenu{
+    @apply fixed w-[150px] left-0 top-0 bg-white text-black  dark:bg-[rgb(60,60,60)] dark:text-[rgb(240,242,245)] text-[13px] py-2 rounded-sm shadow-lg z-20
+ }
+
+
+
+
+ 

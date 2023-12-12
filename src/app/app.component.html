@@ -1,0 +1,33 @@
+<div class=" w-screen h-screen dark:bg-[#1E1F22] flex">
+
+    <div class="w-[calc(100vw)] h-full">
+        <div data-tauri-drag-region
+            class="flex justify-around h-10  dark:bg-[rgb(31,31,31)] border-b-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)] ">
+            <div  data-tauri-drag-region class="flex select-none h-10 items-center">
+                <label data-tauri-drag-region class=" dark:text-[rgb(134,134,134)]   text-black antialiased text-sm font-mono">Excel 文件解析器</label>
+            </div>
+            <div class="flex absolute right-2 h-10 items-center">
+                @if (leftFold) {
+                    <app-codicon iconName="layout-panel-off"  [rotate]="90" fontSize="18px" [showBorder]="true" (click)="lPanelClick($event)"></app-codicon>
+                }@else {
+                    <app-codicon iconName="layout-panel"  [rotate]="90" fontSize="18px"  [showBorder]="true" (click)="lPanelClick($event)"></app-codicon>
+                }
+                <div class="w-2"></div>
+                @if (bottomFold) {
+                    <app-codicon iconName="layout-panel-off" fontSize="18px" [showBorder]="true" (click)="bPanelClick($event)"></app-codicon>
+                }@else {
+                    <app-codicon iconName="layout-panel" fontSize="18px"  [showBorder]="true" (click)="bPanelClick($event)"></app-codicon>
+                }
+            </div>
+        </div>
+        <div class="flex">
+            <app-menu></app-menu>
+            <div class="w-[calc(100vw-3.5rem)]">
+                <app-xls-editor></app-xls-editor>
+            </div>
+          
+        </div>
+       
+    </div>
+
+</div>

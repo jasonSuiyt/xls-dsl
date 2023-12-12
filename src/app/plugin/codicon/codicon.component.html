@@ -1,0 +1,10 @@
+@if (showBorder) {
+    <div class='codicon codicon-{{iconName}}  dark:text-[rgb(189,189,189)]   text-black
+    border-[1px]  border-solid  border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)] rounded-[8px] p-0.5 rotate-{{rotate}} {{selected?"menu-selected":""}}'
+        [style.font-size]="fontSize"  (click)="iconClick($event)"></div>
+}@else {
+    <div class='codicon codicon-{{iconName}}  dark:text-[rgb(189,189,189)]   text-black rounded-[8px] p-0.5 rotate-{{rotate}} {{selected?"menu-selected":""}}'
+        [style.font-size]="fontSize" (click)="iconClick($event)"></div>
+}
+
+

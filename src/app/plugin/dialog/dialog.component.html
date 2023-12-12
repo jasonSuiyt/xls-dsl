@@ -1,0 +1,24 @@
+<div class="relative z-10"  [style.display]="visble?'block':'none'" aria-labelledby="modal-title"
+  role="dialog" aria-modal="true">
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+  <div class="fixed inset-0 z-10 w-screen h-screen overflow-y-auto flex justify-center items-center">
+    <div #dialog style="width: 500px;" cdkDrag [@openClose]="visble"
+      class="  bg-white text-left shadow-2xl fixed   sm:my-8  dark:bg-[rgb(30,30,30)] rounded-sm">
+      <div
+        class=" cursor-move text-sm px-2 py-2 border-b-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)] flex items-center justify-between">
+        <label class="dark:text-[rgb(189,189,189)] select-none">{{title}}</label>
+        <app-codicon iconName="close" class=" cursor-default" fontSize="16px" (click)="close()"></app-codicon>
+      </div>
+      <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+        <div class="">
+          <ng-content select=".dialog-body"></ng-content>
+        </div>
+      </div>
+      <div
+        class="py-2 sm:flex justify-end px-6  border-t-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)]">
+        <!-- <button (click)="save()" type="button" class="inline-flex w-full justify-center font-mono bg-orange-700 px-6 py-1 text-sm  text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">保存</button> -->
+        <ng-content select=".dialog-bottons"></ng-content>
+      </div>
+    </div>
+  </div>
+</div>

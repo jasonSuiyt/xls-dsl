@@ -1,0 +1,31 @@
+<div #xtermView class="  dark:bg-[#1E1E1E] overflow-auto p-1 font-mono h-full bg-scroll xterm-view" (click)="xtermViewClick($event)"
+(mouseleave)="xtermViewML()" [scrollTop]="xtermView.scrollHeight">
+<!-- <pre class=" text-orange-600 dark:text-green-500 text-[8px]">
+██╗  ██╗██╗     ██╗  ██╗    ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗ 
+╚██╗██╔╝██║     ╚██╗██╔╝    ██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
+ ╚███╔╝ ██║      ╚███╔╝     ██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝
+ ██╔██╗ ██║      ██╔██╗     ██╔═══╝ ██╔══██║██╔══██╗╚════██║██╔══╝  ██╔══██╗
+██╔╝ ██╗███████╗██╔╝ ██╗    ██║     ██║  ██║██║  ██║███████║███████╗██║  ██║
+╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
+</pre> -->
+
+@for (message of messages; track $index) {
+@if (message.type == 'Q') {
+<pre class="  flex"><pre class=" pr-1.5 text-green-500 dark:text-green-500">xls-parser:~$</pre> <pre class="text-black dark:text-green-500">{{message.message}}</pre></pre>
+} @else {
+<pre class=" text-green-500 dark:text-green-500">{{message.message}}</pre>
+}
+}
+<div>
+    <input #xterm class="-left-[400px] absolute focus" [(ngModel)]="xtermValue" (keyup)="xtermChange($event)" (keydown)="xtermKeyDown($event)" input-no-space />
+    <div class="flex font-light items-center">
+        <div class=" pr-1.5 text-green-500">xls-parser:~$</div>
+        <div class=" text-black dark:text-green-500"> {{xterm.value}} </div>
+        @if(xtermFocused){
+        <div #curser class="h-4 w-1.5 inline-block bg-black dark:bg-white animate-[blinker_1s_linear_infinite]"></div>
+        }@else{
+        <div #curser class="h-4 w-1.5 inline-block dark:border-white border-[.5px]"></div>
+        }
+    </div>
+</div>
+</div>
