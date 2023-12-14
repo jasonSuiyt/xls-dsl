@@ -1,9 +1,8 @@
 use std::sync::{Arc, Mutex};
 
 use anyhow::anyhow;
-use boa_engine::object::ObjectInitializer;
 use boa_engine::property::Attribute;
-use boa_engine::{Context, JsObject, JsString, JsValue, NativeFunction};
+use boa_engine::{Context, JsValue, NativeFunction};
 use boa_parser::Source;
 use calamine::{open_workbook, Reader, Xlsx};
 use lazy_static::lazy_static;
@@ -130,28 +129,6 @@ impl ParseXls {
                 Ok(res)
             }
             Err(e) => Err(anyhow!("{}", e)),
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::parse_xls::lib::ParseXls;
-
-    #[actix_rt::test]
-    async fn test_parse_xls_read_xls() {
-        let mut parse = ParseXls {
-            xls_path: "/Users/suiyantao/Desktop/PLCC系统硬件清单列表_v1.1_202011181641.xlsx"
-                .to_string(),
-            js_content: r#"
-               for(let i=0,len=data.length; i<len; i++){
-                  println(`${data[i].A}___${data[i].B}`)
-               }
-            "#
-            .to_string(),
-        };
-        for _ in 0..1 {
-            let value = parse.invoke_script().unwrap();
         }
     }
 }
