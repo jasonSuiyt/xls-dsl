@@ -24,31 +24,33 @@ export class TerminalComponent implements OnInit {
 
   xtermValue: string = '';
 
-  messages: Array<Message> = [];
-
   xtermViewML() {
     console.log("xtermViewML")
     this.xterm.nativeElement.blur();
     this.xtermFocused = false;
   }
 
-  public setMsg(msg: string) {
-    this.messages.push({
-      message: msg,
-      type: MessageType.A
-    })
+  public setQMsg(msg: string) {
+    const content = this.content.nativeElement as HTMLInputElement
+    let div = document.createElement("pre");
+    div.classList.add("pr-1.5");
+    div.classList.add("text-green-500");
+    div.innerHTML = "xls-parser:~$ " + msg
+    content.append(div);
   }
 
-  async ngOnInit(): Promise<void> {
-  
-    await appWindow.listen('println', (data) => {
-      const content = this.content.nativeElement as HTMLInputElement
-      //this.setMsg(data.payload as string);
+  public setAMsg(msg: string) {
+    const content = this.content.nativeElement as HTMLInputElement
       let div = document.createElement("div");
       div.classList.add("text-black");
       div.classList.add("dark:text-white");
-      div.innerHTML = data.payload as string;
+      div.innerHTML = msg;
       content.append(div);
+  }
+
+  async ngOnInit(): Promise<void> {
+    await appWindow.listen('println', (data) => {
+      this.setAMsg(data.payload as string)
     });
   }
 
@@ -67,26 +69,19 @@ export class TerminalComponent implements OnInit {
   xtermKeyDown(event: KeyboardEvent) {
     if (event.keyCode === 13) {
 
-      this.messages.push({
-        message: this.xtermValue,
-        type: MessageType.Q
-      })
+      this.setQMsg(this.xtermValue);
       switch (this.xtermValue) {
         case "help":
           break
         case "clear":
           const content = this.content.nativeElement as HTMLInputElement;
           content.innerHTML = "";
-          this.messages = [];
           break
         case "run":
           this.runClick.emit("run");
           break
         default:
-          this.messages.push({
-            message: '不支持此命令',
-            type: MessageType.A
-          })
+          this.setAMsg('不支持此命令');
       }
       this.xtermValue = '';
     }

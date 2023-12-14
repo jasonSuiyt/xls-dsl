@@ -11,15 +11,7 @@
 
     <div #content>
 
-        @for (message of messages; track $index) {
-            @if (message.type == 'Q') {
-            <pre class="  flex"><pre class=" pr-1.5 text-green-500 dark:text-green-500">xls-parser:~$</pre>
-            <pre class="text-black dark:text-green-500">{{message.message}}</pre>
-            </pre>
-            } @else {
-            <div class=" select-text text-black dark:text-white">{{message.message}}</div>
-            }
-            }
+     
     </div>
     <div>
         <div class="flex font-light items-center">
