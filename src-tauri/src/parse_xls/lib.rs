@@ -1,19 +1,20 @@
+use std::sync::{Arc, Mutex};
+
 use anyhow::anyhow;
-use boa_engine::{Context, JsObject, JsString, JsValue, NativeFunction};
 use boa_engine::object::ObjectInitializer;
 use boa_engine::property::Attribute;
+use boa_engine::{Context, JsObject, JsString, JsValue, NativeFunction};
 use boa_parser::Source;
 use calamine::{open_workbook, Reader, Xlsx};
 use lazy_static::lazy_static;
 use serde_json::{json, Map, Number, Value};
+use tauri::Window;
 
 lazy_static! {
     static ref COLUMN_INDEX: Vec<String> = column_index();
 }
 
-
 pub type JsonObject = Map<String, Value>;
-
 
 fn column_index() -> Vec<String> {
     let chars: Vec<String> = (b'A'..=b'Z')
@@ -33,8 +34,9 @@ fn column_index() -> Vec<String> {
 }
 
 pub(crate) struct ParseXls {
-    xls_path: String,
-    js_content: String,
+    pub xls_path: String,
+    pub js_content: String,
+    pub window: Arc<Mutex<Window>>
 }
 
 impl ParseXls {
@@ -83,25 +85,36 @@ impl ParseXls {
         }
     }
 
-
-    pub(crate) fn invoke_script(&mut self) -> anyhow::Result<String> {
+    pub(crate) async fn invoke_script(&mut self) -> anyhow::Result<String> {
         let result = self.read_all()?;
-
+       
+     
         let mut context = Context::default();
 
         unsafe {
-            let println = |_this: &JsValue, args: &[JsValue], _context: &mut Context<'_>| {
-                let arg = args.get(0).cloned();
-                let p = arg
-                    .unwrap()
-                    .to_string(_context)
-                    .unwrap()
-                    .to_std_string_escaped();
-                println!("{:#?}", p);
+            let window = self.window.clone();
+          
+            let println = move |_this: &JsValue, args: &[JsValue], _context: &mut Context<'_>| {
+                let arg: Option<JsValue> = args.get(0).cloned();
+                let p = arg.unwrap();
+                if p.is_object() {
+                    let v = p.to_json(_context).unwrap();
+                    let  w = window.lock();
+                    w.unwrap().emit("println", v.to_string()).unwrap();
+                } else {
+                    let v = p.to_string(_context).unwrap().to_std_string_escaped();
+                    let  w = window.lock();
+                    w.unwrap().emit("println", v).unwrap();
+                }
+
                 Ok(JsValue::Null)
             };
             context
-                .register_global_builtin_callable("println", 1, NativeFunction::from_closure(println))
+                .register_global_builtin_callable(
+                    "println",
+                    1,
+                    NativeFunction::from_closure(println),
+                )
                 .unwrap();
 
             let value = JsValue::from_json(&result, &mut context).unwrap();
@@ -113,21 +126,13 @@ impl ParseXls {
 
         match context.eval(Source::from_bytes(self.js_content.as_str())) {
             Ok(res) => {
-                let res = res.to_string(&mut context).unwrap().to_std_string_escaped();
-                println!(
-                    "res={}",
-                    res
-                );
+                let res: String = res.to_string(&mut context).unwrap().to_std_string_escaped();
                 Ok(res)
             }
-            Err(e) => {
-                println!("{:#?}", e);
-                Err(anyhow!("{}", e))
-            }
+            Err(e) => Err(anyhow!("{}", e)),
         }
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -136,12 +141,14 @@ mod tests {
     #[actix_rt::test]
     async fn test_parse_xls_read_xls() {
         let mut parse = ParseXls {
-            xls_path: "/Users/suiyantao/Desktop/PLCC系统硬件清单列表_v1.1_202011181641.xlsx".to_string(),
+            xls_path: "/Users/suiyantao/Desktop/PLCC系统硬件清单列表_v1.1_202011181641.xlsx"
+                .to_string(),
             js_content: r#"
                for(let i=0,len=data.length; i<len; i++){
                   println(`${data[i].A}___${data[i].B}`)
                }
-            "#.to_string(),
+            "#
+            .to_string(),
         };
         for _ in 0..1 {
             let value = parse.invoke_script().unwrap();

@@ -1,10 +1,9 @@
 export interface FileInfo {
     id?: number;
-    xlsTemplate: string;
+    xlxTemplate: string;
     name: string;
-    content?: string;
-    createDate?: Date;
-    updateDate?: Date;
+    code?: string;
+    createdDate?: Date;
+    updatedDate?: Date;
     selected?: boolean;
-
 }

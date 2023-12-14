@@ -1,54 +1,45 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod parse_xls;
 mod collections;
 mod dao;
 mod handlers;
+mod parse_xls;
 
-use anyhow::anyhow;
-use calamine::{open_workbook, Reader, Xlsx};
-use diesel::{SqliteConnection, Connection};
-use core::result::Result::Ok;
-use std::{env, sync::Mutex};
-use std::sync::Arc;
-use serde_json::{json, Map, Number, Value};
+use handlers::handler;
+
 use crate::dao::db;
+use core::result::Result::Ok;
+use std::env;
 
-
-// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-#[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
-
-
-
+ 
 fn main() {
-
     tauri::Builder::default()
-        .setup(|_app|{
+        .setup(|_app| {
             db::init();
             Ok({})
         })
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![
+            handler::find_all_file,
+            handler::add_file,
+            handler::remove_file,
+            handler::update_code_by_id,
+            handler::update_file,
+            handler::get_by_id,
+            handler::update_name_xls_by_id,
+            handler::run
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
-
-
 #[cfg(test)]
 mod tests {
-
     use boa_engine::{Context, JsResult, JsString, JsValue, NativeFunction, Source};
 
     use super::*;
 
     use std::future::Future;
-
-
 
     #[test]
     fn test_boa() {
@@ -93,6 +84,4 @@ mod tests {
             }
         }
     }
-
-
 }

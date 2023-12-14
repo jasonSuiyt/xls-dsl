@@ -5,6 +5,8 @@ use crate::dao::models::{File, NewFile};
 use crate::dao::schema::file::{code, created_date, id};
 use crate::dao::schema::file::dsl::file;
 
+use super::schema::file::{name, xlx_template};
+
 
 
 
@@ -23,7 +25,7 @@ pub(crate) fn insert(new_file: NewFile) -> anyhow::Result<File> {
 
 pub(crate) fn update(update_file: File) -> anyhow::Result<File> {
     let mut connection = db::establish_db_connection();
-    let i = diesel::update(file::table()).set(update_file.clone()).execute(&mut connection)?;
+    let i = diesel::update(file::table()).set(update_file.clone()).filter(id.eq(&update_file.id)).execute(&mut connection)?;
     Ok(file.filter(id.eq(update_file.id)).first::<File>(&mut connection)?)
 }
 
@@ -33,11 +35,25 @@ pub(crate) fn update_code_by_id(id_where: i32, code_str: String) -> anyhow::Resu
     Ok(file.filter(id.eq(id_where)).first::<File>(&mut connection)?)
 }
 
+pub(crate) fn update_name_xls_by_id(id_where: i32, name_set: String, xls_set: String) -> anyhow::Result<File>{
+    let mut connection = db::establish_db_connection();
+    let i = diesel::update(file).set((name.eq(&name_set), xlx_template.eq(&xls_set))).filter(id.eq(&id_where)).execute(&mut connection)?;
+    Ok(file.filter(id.eq(id_where)).first::<File>(&mut connection)?)
+}
+
+
+
 pub(crate) fn remove(id_del: i32) -> anyhow::Result<usize> {
     let mut connection = db::establish_db_connection();
     let i = diesel::delete(file.filter(id.eq(&id_del))).execute(&mut connection)?;
     Ok(i)
 }
+
+pub(crate) fn get_by_id(where_id: i32) -> anyhow::Result<File> {
+    let mut connection = db::establish_db_connection();
+    Ok(file.filter(id.eq(where_id)).first::<File>(&mut connection)?)
+}
+
 
 
 #[cfg(test)]
@@ -65,8 +81,8 @@ mod tests {
             name: "test".to_string(),
             xlx_template: "test".to_string(),
             code: "test".to_string(),
-            created_date: Local::now().date_naive(),
-            updated_date: Local::now().date_naive(),
+            created_date: Local::now().naive_local(),
+            updated_date: Local::now().naive_local(),
         }).unwrap();
         assert_eq!(res.name, "test");
     }
@@ -78,8 +94,8 @@ mod tests {
             name: "test".to_string(),
             xlx_template: "test".to_string(),
             code: "test".to_string(),
-            created_date: Local::now().date_naive(),
-            updated_date: Local::now().date_naive(),
+            created_date: Local::now().naive_local(),
+            updated_date: Local::now().naive_local(),
         };
         let res = update(file_add.clone()).unwrap();
         assert_eq!(res, file_add)
@@ -100,6 +116,8 @@ mod tests {
 
 
 }
+
+
 
 
 

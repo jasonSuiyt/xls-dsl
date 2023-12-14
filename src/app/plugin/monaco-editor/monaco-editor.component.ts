@@ -1,8 +1,10 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { invoke } from '@tauri-apps/api';
 import { IOutputData, SplitComponent } from 'angular-split';
 import { EditorComponent, NgxEditorModel } from 'ngx-monaco-editor';
 import { MessageType } from 'src/app/enums/message-type';
 import { MqType } from 'src/app/enums/mq-type';
+import { FileInfo } from 'src/app/modal/file-info';
 import { Message } from 'src/app/modal/message';
 import { MessageService } from 'src/app/service/message.service';
 
@@ -14,10 +16,19 @@ import { MessageService } from 'src/app/service/message.service';
 })
 export class MonacoEditorComponent implements OnInit, AfterViewInit {
 
-
+  code!: string;
+ 
+  select_id: number = 0;
+  
+  @Input({required:true}) set id(value: number){    
+    this.select_id = value;
+    invoke<FileInfo>('get_by_id', {id: value}).then(file=>{
+      this.setVal(file.code as string);
+    })
+  }
 
   editorOptions = { theme: 'vs-light', language: 'javascript', fontSize: 14, layout: true,  locale: "zh-cn" };
-  code: string = 'function x() {\n   console.log("Hello world!");\n}';
+  
  
   @ViewChild("xtermView") xtermView!: ElementRef;
 
@@ -71,12 +82,14 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
 
   }
 
-  public setVal(val: string): void {
+  private setVal(val: string): void {
     this.ngxMonacoEditor.writeValue(val);
   }
 
- 
-
+  codeChange(value: string) {
+    const params = {id: this.select_id, code: value};    
+    invoke<FileInfo>('update_code_by_id', {...params}).then(file=>{})
+  }
  
   
  

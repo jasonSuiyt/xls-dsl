@@ -4,7 +4,7 @@ diesel::table! {
         name -> Text,
         xlx_template -> Text,
         code -> Text,
-        created_date -> Date,
-        updated_date -> Date,
+        created_date -> Nullable<Timestamp>,
+        updated_date -> Nullable<Timestamp>,
     }
 }

@@ -31,21 +31,25 @@
                 </div>
             </div>
         </as-split-area>
+      
         <as-split-area>
-            <as-split #splitEl direction="vertical" restrictMove="true" gutterSize="2" (dragEnd)="dragEnd($event)">
-                <div *asSplitGutter="let isDragged = isDragged"
-                    class="h-full w-full dark:bg-[rgb(43,43,43)] hover:bg-blue-600" [class.dragged]="isDragged">
-
-                </div>
-                <as-split-area>
-                    <app-monaco-editor #monacoEditor></app-monaco-editor>
-                </as-split-area>
-
-                <as-split-area #bottomSplitArea size="35">
-                    <app-terminal></app-terminal>
-                </as-split-area>
-            </as-split>
+            <div class="h-[calc(100vh-40px)] w-full">
+                <as-split  #splitEl direction="vertical" restrictMove="true" gutterSize="2" (dragEnd)="dragEnd($event)">
+                    <div *asSplitGutter="let isDragged = isDragged"
+                        class="h-full w-full dark:bg-[rgb(43,43,43)] hover:bg-blue-600" [class.dragged]="isDragged">
+    
+                    </div>
+                    <as-split-area>
+                        <app-monaco-editor [id]="xlsId" #monacoEditor></app-monaco-editor>
+                    </as-split-area>
+    
+                    <as-split-area #bottomSplitArea size="35">
+                        <app-terminal (runClick)="runClick($event)"></app-terminal>
+                    </as-split-area>
+                </as-split>
+            </div>
         </as-split-area>
+
     </as-split>
 
 
@@ -53,13 +57,14 @@
 
         <div class="dialog-body">
             <form [formGroup]="fileForm">
+                <input type="text" formControlName="id"  style="display: none;">
                 <div class="flex items-center w-full">
                     <div class="w-[70px] flex justify-end">
-                        <label for="email"
+                        <label for="name"
                             class="block text-sm font-medium leading-6 text-gray-900 pr-5 dark:text-[rgb(189,189,189)]">名称</label>
                     </div>
                     <div class="w-full">
-                        <input id="email" formControlName="fileName" type="text" class="custome-input">
+                        <input id="name" formControlName="name" type="text" class="custome-input rounded-md">
                     </div>
                 </div>
                 <div class=" h-4">
@@ -67,12 +72,12 @@
                 </div>
                 <div class="flex items-center w-full">
                     <div class="w-[70px] flex justify-end">
-                        <label for="email"
-                            class="block text-sm font-medium leading-6 text-gray-900 pr-5 dark:text-[rgb(189,189,189)]">文件</label>
+                        <label for="xlxTemplate"
+                            class="sle text-sm font-medium leading-6 text-gray-900 pr-5 dark:text-[rgb(189,189,189)]">文件</label>
                     </div>
                     <div class="w-full relative">
-                        <input id="email" readonly formControlName="xlsTemplate" type="text" class="custome-input">
-                        <div><button class=" absolute top-0 right-0 bg-orange-700 text-white h-full px-3 text-[12px]"
+                        <input id="xlxTemplate" readonly formControlName="xlxTemplate" type="text" class="custome-input rounded-md">
+                        <div><button class=" absolute top-0 right-0 bg-orange-700 text-white h-full px-3 text-[12px] rounded-r-md"
                                 (click)="selectFileClick($event)">选择文件</button>
                         </div>
                     </div>
@@ -80,8 +85,8 @@
             </form>
         </div>
         <div class="dialog-bottons">
-            <button (click)="saveCick($event)" type="button"
-                class="inline-flex w-full justify-center font-mono bg-orange-700 px-6 py-1 text-sm  text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-gray-300"
+            <button (click)="saveClick($event)" type="button"
+                class="inline-flex w-full justify-center font-mono bg-orange-700 px-6 py-1 text-sm  text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-gray-300 rounded-md"
                 [disabled]="!fileForm.valid">保存</button>
         </div>
 
