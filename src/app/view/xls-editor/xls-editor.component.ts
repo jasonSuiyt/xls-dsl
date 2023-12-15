@@ -42,7 +42,7 @@ import { formatDate } from '@angular/common';
                 ])
             ]),
             transition('* => *', [
-                animate('0.5s ease')
+                animate('0.2s ease')
             ])
         ])
     ]

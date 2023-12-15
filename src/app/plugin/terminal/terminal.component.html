@@ -1,30 +1,34 @@
-<div #xtermView class="  dark:bg-[#1E1E1E] overflow-auto p-2 font-mono h-full  xterm-view"
-    (click)="xtermViewClick($event)" (mouseleave)="xtermViewML()" [scrollTop]="xtermView.scrollHeight">
-    <!-- <pre class=" text-orange-600 dark:text-green-500 text-[8px]">
-██╗  ██╗██╗     ██╗  ██╗    ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗ 
-╚██╗██╔╝██║     ╚██╗██╔╝    ██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
- ╚███╔╝ ██║      ╚███╔╝     ██████╔╝███████║██████╔╝███████╗█████╗  ██████╔╝
- ██╔██╗ ██║      ██╔██╗     ██╔═══╝ ██╔══██║██╔══██╗╚════██║██╔══╝  ██╔══██╗
-██╔╝ ██╗███████╗██╔╝ ██╗    ██║     ██║  ██║██║  ██║███████║███████╗██║  ██║
-╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
-</pre> -->
-
-    <div #content>
-
-     
-    </div>
-    <div>
-        <div class="flex font-light items-center">
-            <div class=" pr-1.5 text-green-500">xls-parser:~$</div>
-            <div class=" text-green-500"> {{xterm.value}} </div>
-            @if(xtermFocused){
-            <div #curser class="h-4 w-1.5 inline-block bg-black dark:bg-white animate-[blinker_1s_linear_infinite]">
+<div #xtermView class=" select-none overflow-hidden font-mono h-full bg-scroll xterm-view"
+    (click)="xtermViewClick($event)" (mouseleave)="xtermViewML()">
+    <div class="flex flex-col overflow-hidden h-full">
+        <div class="flex-none h-8  border-b-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)]">
+            <div class=" h-full flex  justify-between items-center px-2">
+                <div (click)="play($event)" class='codicon codicon-play  text-green-500  p-0.5' [style.font-size]="12">
+                </div>
+                <div (click)="clear($event)"
+                    class='codicon codicon-clear-all  dark:text-[rgb(189,189,189)]   text-black    p-0.5'
+                    [style.font-size]="12"></div>
             </div>
-            }@else{
-            <div #curser class="h-4 w-1.5 inline-block dark:border-white border-[.5px]"></div>
-            }
+        </div>
+        <div #cccc class="grow overflow-auto px-2 pb-2" [scrollTop]="cccc.scrollHeight">
+            <div #content></div>
+            <div>
+                <div class="flex font-light items-center">
+                    <div class=" pr-1.5 text-green-500">xls-parser:~$</div>
+                    <div class=" text-green-500"> {{xterm.value}} </div>
+                    @if(xtermFocused){
+                    <div #curser
+                        class="h-4 w-1.5 inline-block bg-black dark:bg-white animate-[blinker_1s_linear_infinite]">
+                    </div>
+                    }@else{
+                    <div #curser class="h-4 w-1.5 inline-block dark:border-white border-[.5px]"></div>
+                    }
+                </div>
+            </div>
         </div>
     </div>
-    <input   #xterm class="-left-[400px] fixed focus" [(ngModel)]="xtermValue" (keyup)="xtermChange($event)" (keydown)="xtermKeyDown($event)" input-no-space />
+
+    <input #xterm class="-left-[400px] fixed focus" [(ngModel)]="xtermValue" (keyup)="xtermChange($event)"
+        (keydown)="xtermKeyDown($event)" input-no-space />
 
 </div>

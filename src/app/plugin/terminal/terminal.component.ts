@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, inject, signal } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, inject, signal } from '@angular/core';
 import { MessageType } from 'src/app/enums/message-type';
 import { Message } from 'src/app/modal/message';
 import { appWindow } from "@tauri-apps/api/window";
+
 
 
 @Component({
@@ -12,7 +13,10 @@ import { appWindow } from "@tauri-apps/api/window";
 export class TerminalComponent implements OnInit {
 
 
+
   @ViewChild("xterm") xterm!: ElementRef;
+
+  @ViewChild("xtermView") xtermView!: ElementRef;
 
   @Output()
   runClick: EventEmitter<String> = new EventEmitter();
@@ -65,6 +69,17 @@ export class TerminalComponent implements OnInit {
     $event.preventDefault();
   }
 
+  play($event: MouseEvent) {
+    this.setQMsg("run");
+    this.runClick.emit("run");
+  }
+
+  clear($event: MouseEvent) {
+    this.setQMsg("clear");
+    const content = this.content.nativeElement as HTMLInputElement;
+    content.innerHTML = "";
+  }
+
 
   xtermKeyDown(event: KeyboardEvent) {
     if (event.keyCode === 13) {
@@ -72,6 +87,8 @@ export class TerminalComponent implements OnInit {
       this.setQMsg(this.xtermValue);
       switch (this.xtermValue) {
         case "help":
+          this.setAMsg("run&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;运行代码");
+          this.setAMsg("clear&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;清屏")
           break
         case "clear":
           const content = this.content.nativeElement as HTMLInputElement;

@@ -1,10 +1,10 @@
-<div class="h-screen">
+<div class="h-[calc(100vh-40px)] overflow-hidden">
     <as-split #splitPEl direction="horizontal" restrictMove="true" gutterSize="2">
         <div *asSplitGutter="let isDragged = isDragged" class="h-full w-full dark:bg-[rgb(43,43,43)] hover:bg-blue-600"
             [class.dragged]="isDragged">
         </div>
         <as-split-area #leftSplitArea size="20">
-            <div class="h-full w-full dark:bg-[rgb(30,30,30)]">
+            <div class="flex flex-col h-full w-full dark:bg-[rgb(30,30,30)] overflow-hidden">
                 <div
                     class="w-full relative  h-9 flex justify-end items-center pr-1 drop-shadow-sm  border-b-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)]">
                     <div class=" absolute left-2">
@@ -19,7 +19,8 @@
                         <app-codicon iconName="refresh" (click)="refresh($event)" fontSize="16px"></app-codicon>
                     </div>
                 </div>
-                <div class="">
+                
+                <div class="overflow-auto">
                     @for (file of fileList; track $index) {
                     <div (contextmenu)="fileContextmenu($event, file)" #fileItem
                         class="dark:text-[rgb(189,189,189)] hover:bg-[rgb(224,226,239)] hover:dark:bg-[rgb(48,48,53)]  select-none  text-black  text-[14px] flex items-stretch {{file.selected?'file-selected':''}}"
@@ -59,25 +60,25 @@
             <form [formGroup]="fileForm">
                 <input type="text" formControlName="id"  style="display: none;">
                 <div class="flex items-center w-full">
-                    <div class="w-[70px] flex justify-end">
+                    <div class="w-[65px] flex justify-end">
                         <label for="name"
                             class="block text-sm font-medium leading-6 text-gray-900 pr-5 dark:text-[rgb(189,189,189)]">名称</label>
                     </div>
                     <div class="w-full">
-                        <input id="name" formControlName="name" type="text" class="custome-input rounded-md">
+                        <input id="name" formControlName="name" type="text" class="custome-input rounded-sm">
                     </div>
                 </div>
                 <div class=" h-4">
 
                 </div>
                 <div class="flex items-center w-full">
-                    <div class="w-[70px] flex justify-end">
+                    <div class="w-[65px] flex justify-end">
                         <label for="xlxTemplate"
                             class="sle text-sm font-medium leading-6 text-gray-900 pr-5 dark:text-[rgb(189,189,189)]">文件</label>
                     </div>
                     <div class="w-full relative">
-                        <input id="xlxTemplate" readonly formControlName="xlxTemplate" type="text" class="custome-input rounded-md">
-                        <div><button class=" absolute top-0 right-0 bg-orange-700 text-white h-full px-3 text-[12px] rounded-r-md"
+                        <input id="xlxTemplate" readonly formControlName="xlxTemplate" type="text" class="custome-input rounded-sm">
+                        <div><button class=" absolute top-0 right-0 bg-orange-700 text-white h-full px-3 text-[12px] rounded-r-sm"
                                 (click)="selectFileClick($event)">选择文件</button>
                         </div>
                     </div>
@@ -86,20 +87,20 @@
         </div>
         <div class="dialog-bottons">
             <button (click)="saveClick($event)" type="button"
-                class="inline-flex w-full justify-center font-mono bg-orange-700 px-6 py-1 text-sm  text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-gray-300 rounded-md"
+                class="inline-flex w-full justify-center font-mono bg-orange-700 px-6 py-1 text-sm  text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto disabled:bg-gray-300 rounded-sm"
                 [disabled]="!fileForm.valid">保存</button>
         </div>
 
     </app-dialog>
 
     <div [@openClose]="menuShow"
-     #fileContentMenu class="contentMenu px-2 cursor-pointer">
-        <div (click)="addFile($event)" class="hover:bg-[rgb(19,90,180)] hover:text-white cursor-pointer py-[2px]">
-            <label class="pl-5 cursor-pointer">新增</label> </div>
-        <div (click)="editFile($event)" class="hover:bg-[rgb(19,90,180)] hover:text-white cursor-pointer py-[2px]">
-            <label class="pl-5 cursor-pointer">修改</label> </div>
-        <div (click)="delFile($event)" class="hover:bg-[rgb(19,90,180)] hover:text-white cursor-pointer py-[2px]">
-            <label class="pl-5 cursor-pointer">删除</label> </div>
+     #fileContentMenu class="contentMenu px-1 cursor-pointer">
+        <div (click)="addFile($event)" class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
+            <label class="pl-2 cursor-pointer">新增</label> </div>
+        <div (click)="editFile($event)" class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
+            <label class="pl-2 cursor-pointer">修改</label> </div>
+        <div (click)="delFile($event)" class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
+            <label class="pl-2 cursor-pointer">删除</label> </div>
     </div>
 
 </div>

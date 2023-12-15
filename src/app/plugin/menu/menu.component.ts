@@ -17,12 +17,12 @@ import { isPermissionGranted, requestPermission, sendNotification } from '@tauri
                 top : '96px'
             })),
           
-            transition('xlsEditor => *', [
-                animate(500)
+            transition('* => *', [
+                animate(100)
             ]),
-            transition('debug => *', [
-                animate(500)
-            ]),
+            // transition('debug => *', [
+            //     animate(500)
+            // ]),
         ])
     ]
 })

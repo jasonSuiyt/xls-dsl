@@ -7,7 +7,8 @@
  }
 
  .contentMenu{
-    @apply fixed w-[150px] left-0 top-0 bg-white text-black  dark:bg-[rgb(60,60,60)] dark:text-[rgb(240,242,245)] text-[13px] py-2 rounded-sm shadow-lg z-20
+    @apply fixed w-[100px] left-0 top-0 bg-white text-black  dark:bg-[rgb(60,60,60)] dark:text-[rgb(240,242,245)] text-[13px] py-2   z-20 rounded-sm  
+    shadow-lg shadow-gray-600 dark:shadow-black border-[1px] border-solid border-[rgb(220,220,220)] dark:border-gray-600
  }
 
 
