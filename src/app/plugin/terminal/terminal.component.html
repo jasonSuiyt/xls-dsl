@@ -1,4 +1,4 @@
-<div #xtermView class="  dark:bg-[#1E1E1E] overflow-auto p-2 font-mono h-full bg-scroll xterm-view"
+<div #xtermView class="  dark:bg-[#1E1E1E] overflow-auto p-2 font-mono h-full  xterm-view"
     (click)="xtermViewClick($event)" (mouseleave)="xtermViewML()" [scrollTop]="xtermView.scrollHeight">
     <!-- <pre class=" text-orange-600 dark:text-green-500 text-[8px]">
 ██╗  ██╗██╗     ██╗  ██╗    ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗ 
@@ -16,7 +16,7 @@
     <div>
         <div class="flex font-light items-center">
             <div class=" pr-1.5 text-green-500">xls-parser:~$</div>
-            <div class=" text-black dark:text-green-500"> {{xterm.value}} </div>
+            <div class=" text-green-500"> {{xterm.value}} </div>
             @if(xtermFocused){
             <div #curser class="h-4 w-1.5 inline-block bg-black dark:bg-white animate-[blinker_1s_linear_infinite]">
             </div>

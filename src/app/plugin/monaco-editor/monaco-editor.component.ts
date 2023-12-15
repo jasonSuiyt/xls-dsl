@@ -17,19 +17,21 @@ import { MessageService } from 'src/app/service/message.service';
 export class MonacoEditorComponent implements OnInit, AfterViewInit {
 
   code!: string;
- 
+
   select_id: number = 0;
-  
-  @Input({required:true}) set id(value: number){    
+
+  @Input({ required: true }) set id(value: number) {
     this.select_id = value;
-    invoke<FileInfo>('get_by_id', {id: value}).then(file=>{
-      this.setVal(file.code as string);
-    })
+    if (value) {
+      invoke<FileInfo>('get_by_id', { id: value }).then(file => {
+        this.setVal(file.code as string);
+      })
+    } 
   }
 
-  editorOptions = { theme: 'vs-light', language: 'javascript', fontSize: 14, layout: true,  locale: "zh-cn" };
-  
- 
+  editorOptions = { theme: 'vs-light', language: 'javascript', fontSize: 14, layout: true, locale: "zh-cn" };
+
+
   @ViewChild("xtermView") xtermView!: ElementRef;
 
   @ViewChild("ngxMonacoEditor") ngxMonacoEditor!: EditorComponent;
@@ -40,9 +42,9 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
 
   editor: any;
 
-  constructor(public messageSrv: MessageService){}
+  constructor(public messageSrv: MessageService) { }
 
- 
+
   onInit(editor: any) {
     this.editor = editor;
   }
@@ -65,9 +67,9 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
       }
     });
     this.messageSrv.onMessage(message => {
-        if (message.type === MqType.SPLIT){
-          this.onResize();
-        }
+      if (message.type === MqType.SPLIT) {
+        this.onResize();
+      }
     });
   }
 
@@ -87,10 +89,10 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
   }
 
   codeChange(value: string) {
-    const params = {id: this.select_id, code: value};    
-    invoke<FileInfo>('update_code_by_id', {...params}).then(file=>{})
+    const params = { id: this.select_id, code: value };
+    invoke<FileInfo>('update_code_by_id', { ...params }).then(file => { })
   }
- 
-  
- 
+
+
+
 }
