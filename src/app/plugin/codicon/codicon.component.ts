@@ -13,6 +13,12 @@ export class CodiconComponent {
 
   @Input() rotate!: number;
 
+  @Input() color!: string;
+
+  @Input() tips!: string;
+
+  @Input() darkColor!: string;
+
   @Input() fontSize: string = "20px";
 
   @Input({transform: booleanAttribute}) showBorder!: boolean;

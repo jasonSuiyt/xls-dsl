@@ -12,6 +12,7 @@ import { appWindow } from "@tauri-apps/api/window";
 })
 export class TerminalComponent implements OnInit {
 
+  playOn: boolean = false;
 
 
   @ViewChild("xterm") xterm!: ElementRef;

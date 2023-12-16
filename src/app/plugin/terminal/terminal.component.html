@@ -3,11 +3,17 @@
     <div class="flex flex-col overflow-hidden h-full">
         <div class="flex-none h-8  border-b-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)]">
             <div class=" h-full flex  justify-between items-center px-2">
-                <div (click)="play($event)" class='codicon codicon-play  text-green-500  p-0.5' [style.font-size]="12">
+                <div class="flex items-center">
+                    <app-codicon color="rgb(34,197,94)" (click)="play($event)" iconName="play" class="w-4 h-4"
+                        fontSize="14"></app-codicon>
                 </div>
-                <div (click)="clear($event)"
-                    class='codicon codicon-clear-all  dark:text-[rgb(189,189,189)]   text-black    p-0.5'
-                    [style.font-size]="12"></div>
+
+                <div>
+                    <app-codicon  iconName="copy" class="w-4 h-4 pr-2" fontSize="14"></app-codicon>
+                    <app-codicon (click)="clear($event)" iconName="clear-all" class="w-4 h-4"
+                        fontSize="14"></app-codicon>
+                </div>
+
             </div>
         </div>
         <div #cccc class="grow overflow-auto px-2 pb-2" [scrollTop]="cccc.scrollHeight">

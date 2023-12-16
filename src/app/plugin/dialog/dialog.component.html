@@ -7,7 +7,8 @@
       <div cdkDragHandle
         class=" cursor-move text-sm px-2 py-2 border-b-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)] flex items-center justify-between">
         <label class=" dark:text-[rgb(189,189,189)] select-none">{{title}}</label>
-        <app-codicon iconName="close" class=" cursor-default" fontSize="16px" (click)="close()"></app-codicon>
+        <div class='codicon codicon-close  dark:text-[rgb(189,189,189)]    text-black cursor-default'
+        [style.font-size]="16" (click)="close()"></div>
       </div>
       <div class="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
         <div class="">
