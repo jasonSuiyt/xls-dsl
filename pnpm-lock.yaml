@@ -29,9 +29,6 @@ dependencies:
   '@angular/platform-browser-dynamic':
     specifier: ^17.0.5
     version: 17.0.5(@angular/common@17.0.5)(@angular/compiler@17.0.5)(@angular/core@17.0.5)(@angular/platform-browser@17.0.5)
-  '@better-scroll/core':
-    specifier: ^2.5.1
-    version: 2.5.1
   '@fortawesome/angular-fontawesome':
     specifier: 0.14.0
     version: 0.14.0(@angular/core@17.0.5)(@fortawesome/fontawesome-svg-core@6.5.1)
@@ -47,9 +44,6 @@ dependencies:
   '@tauri-apps/api':
     specifier: ^1.4.0
     version: 1.5.1
-  '@types/iscroll':
-    specifier: ^5.2.10
-    version: 5.2.10
   '@vscode/codicons':
     specifier: ^0.0.35
     version: 0.0.35
@@ -1719,16 +1713,6 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
-  /@better-scroll/core@2.5.1:
-    resolution: {integrity: sha512-koKOuYA55dQ04FJRIVUpMGDr1hbCfWmfX0MGp1hKagkQSWSRpwblqACiwtggVauoj9aaJRJZ9hDsTM4weaavlg==}
-    dependencies:
-      '@better-scroll/shared-utils': 2.5.1
-    dev: false
-
-  /@better-scroll/shared-utils@2.5.1:
-    resolution: {integrity: sha512-AplkfSjXVYP9LZiD6JsKgmgQJ/mG4uuLmBuwLz8W5OsYc7AYTfN8kw6GqZ5OwCGoXkVhBGyd8NeC4xwYItp0aw==}
-    dev: false
-
   /@colors/colors@1.5.0:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
@@ -2629,10 +2613,6 @@ packages:
     dependencies:
       '@types/node': 20.10.1
     dev: true
-
-  /@types/iscroll@5.2.10:
-    resolution: {integrity: sha512-Z6V7uT5c3ceT/GuXesd5WQ5CaAezypIeRBLtUNV0auzCCiu/mhPOgr7DBjvg6ed060S8OIeV7AEvs2GPMcVqxg==}
-    dev: false
 
   /@types/jasmine@4.3.6:
     resolution: {integrity: sha512-3N0FpQTeiWjm+Oo1WUYWguUS7E6JLceiGTriFrG8k5PU7zRLJCzLcWURU3wjMbZGS//a2/LgjsnO3QxIlwxt9g==}
