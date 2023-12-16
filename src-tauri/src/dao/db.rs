@@ -50,6 +50,20 @@ fn db_file_exists() -> bool {
     Path::new(&db_path).exists()
 }
 
+#[cfg(target_os = "macos")]
+fn get_db_path() -> String {
+    let home_dir = dirs::home_dir().unwrap();
+    home_dir.to_str().unwrap().to_string() + "/xlsDsl/database.sqlite"
+}
+
+#[cfg(target_os = "window")]
+fn get_db_path() -> String {
+    let home_dir = dirs::home_dir().unwrap();
+    home_dir.to_str().unwrap().to_string() + "\\xlsDsl\\database.sqlite"
+}
+
+
+#[cfg(target_os = "linux")]
 fn get_db_path() -> String {
     let home_dir = dirs::home_dir().unwrap();
     home_dir.to_str().unwrap().to_string() + "/xlsDsl/database.sqlite"
