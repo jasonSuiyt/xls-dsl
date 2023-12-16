@@ -56,7 +56,7 @@ fn get_db_path() -> String {
     home_dir.to_str().unwrap().to_string() + "/xlsDsl/database.sqlite"
 }
 
-#[cfg(target_os = "window")]
+#[cfg(target_os = "windows")]
 fn get_db_path() -> String {
     let home_dir = dirs::home_dir().unwrap();
     home_dir.to_str().unwrap().to_string() + "\\xlsDsl\\database.sqlite"
