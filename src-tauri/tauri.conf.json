@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "xls-dsl",
+    "productName": "Excel解析器",
     "version": "0.0.0"
   },
   "tauri": {
