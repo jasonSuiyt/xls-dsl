@@ -60,7 +60,7 @@ export class TerminalComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await appWindow.listen('println', (data) => {
       this.setAMsg(data.payload as string);
-      this.logRes.push(data.payload as string);
+      //this.logRes.push(data.payload as string);
     });
   }
 
