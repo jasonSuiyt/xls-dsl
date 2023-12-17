@@ -89,23 +89,29 @@ impl ParseXls {
        
      
         let mut context = Context::default();
+        let window = self.window.clone();
 
         unsafe {
-            let window = self.window.clone();
-          
+           
             let println = move |_this: &JsValue, args: &[JsValue], _context: &mut Context<'_>| {
                 let arg: Option<JsValue> = args.get(0).cloned();
+
                 let p = arg.unwrap();
+         
                 if p.is_object() {
                     let v = p.to_json(_context).unwrap();
-                    let  w = window.lock();
+                    let mut w = window.lock();
+                    drop(w.as_mut());
                     w.unwrap().emit("println", v.to_string()).unwrap();
+                
                 } else {
                     let v = p.to_string(_context).unwrap().to_std_string_escaped();
-                    let  w = window.lock();
+                    let mut  w = window.lock();
+                    drop(w.as_mut());
                     w.unwrap().emit("println", v).unwrap();
                 }
-
+                drop(p);
+                drop(args.get(0).cloned());
                 Ok(JsValue::Null)
             };
             context
@@ -115,13 +121,13 @@ impl ParseXls {
                     NativeFunction::from_closure(println),
                 )
                 .unwrap();
-
-            let value = JsValue::from_json(&result, &mut context).unwrap();
-
-            context
-                .register_global_property("data", value, Attribute::all())
-                .expect("property shouldn't exist");
         };
+
+        let value = JsValue::from_json(&result, &mut context).unwrap();
+
+        context
+            .register_global_property("data", value, Attribute::all())
+            .expect("property shouldn't exist");
 
         match context.eval(Source::from_bytes(self.js_content.as_str())) {
             Ok(res) => {
