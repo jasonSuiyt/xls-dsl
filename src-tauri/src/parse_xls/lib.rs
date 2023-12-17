@@ -92,36 +92,37 @@ impl ParseXls {
         let window = self.window.clone();
 
         unsafe {
-           
             let println = move |_this: &JsValue, args: &[JsValue], _context: &mut Context<'_>| {
-                let arg: Option<JsValue> = args.get(0).cloned();
+                let  arg: Option<JsValue> = args.get(0).cloned();
 
-                let p = arg.unwrap();
+                let p: JsValue = arg.clone().unwrap();
          
                 if p.is_object() {
-                    let v = p.to_json(_context).unwrap();
-                    let mut w = window.lock();
-                    drop(w.as_mut());
+                    let p = p.to_json(_context);
+                    let v = p.clone().unwrap();
+                    let w = window.lock();
                     w.unwrap().emit("println", v.to_string()).unwrap();
-                
+                    drop(p);
                 } else {
-                    let v = p.to_string(_context).unwrap().to_std_string_escaped();
-                    let mut  w = window.lock();
-                    drop(w.as_mut());
-                    w.unwrap().emit("println", v).unwrap();
+                    let p = p.to_string(_context);
+                    let v = p.clone().unwrap().to_std_string_escaped();
+                    let w = window.lock().unwrap();
+                    w.emit("println", v.clone()).unwrap();
+                    drop(p);
                 }
-                drop(p);
-                drop(args.get(0).cloned());
+                drop(arg);
                 Ok(JsValue::Null)
             };
             context
-                .register_global_builtin_callable(
+                .register_global_callable(
                     "println",
                     1,
                     NativeFunction::from_closure(println),
                 )
                 .unwrap();
         };
+
+        // context.register_global_callable("println", length, body)
 
         let value = JsValue::from_json(&result, &mut context).unwrap();
 
