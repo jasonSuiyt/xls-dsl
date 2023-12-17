@@ -85,6 +85,7 @@ export class TerminalComponent implements OnInit {
   play($event: MouseEvent) {
     this.setQMsg("run");
     this.runClick.emit("run");
+    this.logRes = [];
   }
 
   clear($event: MouseEvent) {
