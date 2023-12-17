@@ -13,6 +13,11 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "clipboard":{
+        "all": true,
+        "readText": true,
+        "writeText": true
+      },
       "shell": {
         "all": false,
         "open": true
@@ -33,7 +38,7 @@
         "all": false,
         "ask": true,
         "confirm": false,
-        "message": false,
+        "message": true,
         "open": true,
         "save": false
       }

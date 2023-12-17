@@ -9,7 +9,7 @@
                 </div>
 
                 <div>
-                    <app-codicon  iconName="copy" class="w-4 h-4 pr-2" fontSize="14"></app-codicon>
+                    <app-codicon (click) = "copyClick($event)" iconName="copy" class="w-4 h-4 pr-2" fontSize="14"></app-codicon>
                     <app-codicon (click)="clear($event)" iconName="clear-all" class="w-4 h-4"
                         fontSize="14"></app-codicon>
                 </div>
@@ -36,5 +36,4 @@
 
     <input #xterm class="-left-[400px] fixed focus" [(ngModel)]="xtermValue" (keyup)="xtermChange($event)"
         (keydown)="xtermKeyDown($event)" input-no-space />
-
 </div>

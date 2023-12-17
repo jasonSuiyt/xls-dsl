@@ -2,7 +2,8 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, E
 import { MessageType } from 'src/app/enums/message-type';
 import { Message } from 'src/app/modal/message';
 import { appWindow } from "@tauri-apps/api/window";
-
+import { writeText } from '@tauri-apps/api/clipboard';
+import { message } from '@tauri-apps/api/dialog';
 
 
 @Component({
@@ -11,6 +12,7 @@ import { appWindow } from "@tauri-apps/api/window";
   styleUrl: './terminal.component.css',
 })
 export class TerminalComponent implements OnInit {
+
 
   playOn: boolean = false;
 
@@ -24,6 +26,8 @@ export class TerminalComponent implements OnInit {
   changeDetectorRef = inject(ChangeDetectorRef);
 
   @ViewChild("content") content!: ElementRef;
+
+  logRes = Array<string>();
 
   xtermFocused = false;
 
@@ -55,7 +59,8 @@ export class TerminalComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await appWindow.listen('println', (data) => {
-      this.setAMsg(data.payload as string)
+      this.setAMsg(data.payload as string);
+      this.logRes.push(data.payload as string);
     });
   }
 
@@ -96,6 +101,7 @@ export class TerminalComponent implements OnInit {
           content.innerHTML = "";
           break
         case "run":
+          this.logRes = [];
           this.runClick.emit("run");
           break
         default:
@@ -106,5 +112,10 @@ export class TerminalComponent implements OnInit {
   }
 
 
+  async copyClick($event: MouseEvent) {
+    const copyText = this.logRes.join("\n");
+    await writeText(copyText);
+    await message("复制成功");
+  }
 
 }
