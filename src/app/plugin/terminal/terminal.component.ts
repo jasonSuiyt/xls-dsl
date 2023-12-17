@@ -49,18 +49,25 @@ export class TerminalComponent implements OnInit {
   }
 
   public setAMsg(msg: string) {
-    const content = this.content.nativeElement as HTMLInputElement
-      let div = document.createElement("div");
-      div.classList.add("text-black");
-      div.classList.add("dark:text-white");
-      div.innerHTML = msg;
-      content.append(div);
+    const content = this.content.nativeElement as HTMLInputElement;
+    if (content) {
+      const divs = content.getElementsByTagName("pre");
+      if(divs.length > 1500){
+        content.removeChild(divs[0]);
+      }
+    }
+ 
+    let div = document.createElement("pre");
+    div.classList.add("text-black");
+    div.classList.add("dark:text-white");
+    div.innerHTML = msg;
+    content.append(div);
   }
 
   async ngOnInit(): Promise<void> {
     await appWindow.listen('println', (data) => {
       this.setAMsg(data.payload as string);
-      //this.logRes.push(data.payload as string);
+      this.logRes.push(data.payload as string);
     });
   }
 
