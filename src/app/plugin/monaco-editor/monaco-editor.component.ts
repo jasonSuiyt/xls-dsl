@@ -1,4 +1,3 @@
-import { languages } from './../../../../dist/xls-dsl/assets/monaco-editor/esm/metadata.d';
 import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
 import { IOutputData, SplitComponent } from 'angular-split';
