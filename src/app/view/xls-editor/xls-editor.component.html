@@ -1,5 +1,5 @@
 <div class="h-[calc(100vh-40px)] overflow-hidden">
-    <as-split #splitPEl direction="horizontal" restrictMove="true" gutterSize="2">
+    <as-split #splitPEl direction="horizontal" restrictMove="true" gutterSize="2" (dragEnd)="dragEnd($event)">
         <div *asSplitGutter="let isDragged = isDragged" class="h-full w-full dark:bg-[rgb(43,43,43)] hover:bg-blue-600"
             [class.dragged]="isDragged">
         </div>
@@ -19,7 +19,7 @@
                         <app-codicon iconName="refresh" (click)="refresh($event)" fontSize="16px"></app-codicon>
                     </div>
                 </div>
-                
+
                 <div class="overflow-auto">
                     @for (file of fileList; track $index) {
                     <div (contextmenu)="fileContextmenu($event, file)" #fileItem
@@ -32,18 +32,18 @@
                 </div>
             </div>
         </as-split-area>
-      
+
         <as-split-area>
             <div class="h-[calc(100vh-40px)] w-full">
-                <as-split  #splitEl direction="vertical" restrictMove="true" gutterSize="2" (dragEnd)="dragEnd($event)">
+                <as-split #splitEl direction="vertical" restrictMove="true" gutterSize="2" (dragEnd)="dragEnd($event)">
                     <div *asSplitGutter="let isDragged = isDragged"
                         class="h-full w-full dark:bg-[rgb(43,43,43)] hover:bg-blue-600" [class.dragged]="isDragged">
-    
+
                     </div>
                     <as-split-area>
                         <app-monaco-editor [id]="xlsId" #monacoEditor></app-monaco-editor>
                     </as-split-area>
-    
+
                     <as-split-area #bottomSplitArea size="35">
                         <app-terminal (runClick)="runClick($event)"></app-terminal>
                     </as-split-area>
@@ -58,7 +58,7 @@
 
         <div class="dialog-body">
             <form [formGroup]="fileForm">
-                <input type="text" formControlName="id"  style="display: none;">
+                <input type="text" formControlName="id" style="display: none;">
                 <div class="flex items-center w-full">
                     <div class="w-[65px] flex justify-end">
                         <label for="name"
@@ -77,8 +77,10 @@
                             class="sle text-sm font-medium leading-6 text-gray-900 pr-5 dark:text-[rgb(189,189,189)]">文件</label>
                     </div>
                     <div class="w-full relative">
-                        <input id="xlxTemplate" readonly formControlName="xlxTemplate" type="text" class="custome-input rounded-sm">
-                        <div><button class=" absolute top-0 right-0 bg-orange-700 text-white h-full px-3 text-[12px] rounded-r-sm"
+                        <input id="xlxTemplate" readonly formControlName="xlxTemplate" type="text"
+                            class="custome-input rounded-sm">
+                        <div><button
+                                class=" absolute top-0 right-0 bg-orange-700 text-white h-full px-3 text-[12px] rounded-r-sm"
                                 (click)="selectFileClick($event)">选择文件</button>
                         </div>
                     </div>
@@ -93,14 +95,27 @@
 
     </app-dialog>
 
-    <div [@openClose]="menuShow"
-     #fileContentMenu class="contentMenu px-1 cursor-pointer">
-        <div (click)="addFile($event)" class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
-            <label class="pl-2 cursor-pointer">新增</label> </div>
-        <div (click)="editFile($event)" class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
-            <label class="pl-2 cursor-pointer">修改</label> </div>
-        <div (click)="delFile($event)" class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
-            <label class="pl-2 cursor-pointer">删除</label> </div>
+    <div [@openClose]="menuShow" #fileContentMenu class="contentMenu px-1 cursor-pointer">
+        <div (click)="addFile($event)"
+            class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
+            <label class="pl-2 cursor-pointer">新增</label>
+        </div>
+        <div (click)="editFile($event)"
+            class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
+            <label class="pl-2 cursor-pointer">修改</label>
+        </div>
+        <div (click)="delFile($event)"
+            class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
+            <label class="pl-2 cursor-pointer">删除</label>
+        </div>
+        <!-- <div (click)="delFile($event)"
+            class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
+            <label class="pl-2 cursor-pointer">导入</label>
+        </div>
+        <div (click)="delFile($event)"
+            class="hover:bg-[rgb(19,90,180)] rounded-sm hover:text-white cursor-pointer py-[2px]">
+            <label class="pl-2 cursor-pointer">导出</label>
+        </div> -->
     </div>
 
 </div>

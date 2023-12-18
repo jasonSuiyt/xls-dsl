@@ -51,11 +51,11 @@ dependencies:
     specifier: ^17.1.1
     version: 17.1.1(@angular/common@17.0.5)(@angular/core@17.0.5)(rxjs@7.8.1)
   monaco-editor:
-    specifier: ^0.44.0
-    version: 0.44.0
+    specifier: ^0.45.0
+    version: 0.45.0
   ngx-monaco-editor:
     specifier: ^12.0.0
-    version: 12.0.0(@angular/common@17.0.5)(@angular/core@17.0.5)(monaco-editor@0.44.0)
+    version: 12.0.0(@angular/common@17.0.5)(@angular/core@17.0.5)(monaco-editor@0.45.0)
   rxjs:
     specifier: ~7.8.0
     version: 7.8.1
@@ -5658,8 +5658,8 @@ packages:
     hasBin: true
     dev: true
 
-  /monaco-editor@0.44.0:
-    resolution: {integrity: sha512-5SmjNStN6bSuSE5WPT2ZV+iYn1/yI9sd4Igtk23ChvqB7kDk9lZbB9F5frsuvpB+2njdIeGGFf2G4gbE6rCC9Q==}
+  /monaco-editor@0.45.0:
+    resolution: {integrity: sha512-mjv1G1ZzfEE3k9HZN0dQ2olMdwIfaeAAjFiwNprLfYNRSz7ctv9XuCT7gPtBGrMUeV1/iZzYKj17Khu1hxoHOA==}
     dev: false
 
   /mrmime@1.0.1:
@@ -5729,7 +5729,7 @@ packages:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
     dev: true
 
-  /ngx-monaco-editor@12.0.0(@angular/common@17.0.5)(@angular/core@17.0.5)(monaco-editor@0.44.0):
+  /ngx-monaco-editor@12.0.0(@angular/common@17.0.5)(@angular/core@17.0.5)(monaco-editor@0.45.0):
     resolution: {integrity: sha512-/HXTILVwWvrk4OkT1p88nb+PGEqlecQot2VMTdSLbVW7A24fNZpDAF6tNR4Bp3V/abZjShDK8LfsqLePA0tPmw==}
     peerDependencies:
       '@angular/common': ^12.0.0
@@ -5738,7 +5738,7 @@ packages:
     dependencies:
       '@angular/common': 17.0.5(@angular/core@17.0.5)(rxjs@7.8.1)
       '@angular/core': 17.0.5(rxjs@7.8.1)(zone.js@0.13.3)
-      monaco-editor: 0.44.0
+      monaco-editor: 0.45.0
       tslib: 2.6.2
     dev: false
 

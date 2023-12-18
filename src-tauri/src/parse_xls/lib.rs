@@ -1,8 +1,9 @@
+use std::future::Future;
 use std::sync::{Arc, Mutex};
 
 use anyhow::anyhow;
 use boa_engine::property::Attribute;
-use boa_engine::{Context, JsValue, NativeFunction};
+use boa_engine::{Context, JsResult, JsString, JsValue, NativeFunction};
 use boa_parser::Source;
 use calamine::{open_workbook, Reader, Xlsx};
 use lazy_static::lazy_static;
@@ -35,7 +36,7 @@ fn column_index() -> Vec<String> {
 pub(crate) struct ParseXls {
     pub xls_path: String,
     pub js_content: String,
-    pub window: Arc<Mutex<Window>>
+    pub window: Arc<Mutex<Window>>,
 }
 
 impl ParseXls {
@@ -86,39 +87,52 @@ impl ParseXls {
 
     pub(crate) async fn invoke_script(&mut self) -> anyhow::Result<String> {
         let result = self.read_all()?;
-       
-     
+
         let mut context = Context::default();
         let window = self.window.clone();
 
         unsafe {
             let println = move |_this: &JsValue, args: &[JsValue], _context: &mut Context<'_>| {
-                let  arg: Option<JsValue> = args.get(0).cloned();
+                let arg: Option<JsValue> = args.get(0).cloned();
 
                 let p: JsValue = arg.clone().unwrap();
-         
+
                 if p.is_object() {
                     let p = p.to_json(_context);
                     let v = p.clone().unwrap();
                     let w = window.lock();
                     w.unwrap().emit("println", v.to_string()).unwrap();
-                    drop(p);
                 } else {
                     let p = p.to_string(_context);
-                    let v = p.clone().unwrap().to_std_string_escaped();
-                    let w = window.lock().unwrap();
-                    w.emit("println", v.clone()).unwrap();
-                    drop(p);
+                    let v = p.unwrap().to_std_string_escaped();
+                    if let Ok(w) = window.lock() {
+                        if let Ok(_) = w.emit("println", v.clone()) {}
+                    }
                 }
+                drop(p);
                 drop(arg);
                 Ok(JsValue::Null)
             };
             context
-                .register_global_callable(
-                    "println",
-                    1,
-                    NativeFunction::from_closure(println),
-                )
+                .register_global_callable("println", 1, NativeFunction::from_closure(println))
+                .unwrap();
+
+            let snoyflake_id = move |_this: &JsValue, _: &[JsValue], _context: &mut Context<'_>| {
+                let next_id = sonyflake::Sonyflake::new().unwrap().next_id().unwrap();
+                Ok(JsValue::String(JsString::from(next_id.to_string())))
+            };
+
+            context
+                .register_global_callable("snowid", 0, NativeFunction::from_closure(snoyflake_id))
+                .unwrap();
+
+            let uu_id_call = move |_this: &JsValue, _: &[JsValue], _context: &mut Context<'_>| {
+                let uuid = uuid::Uuid::new_v4().to_string();
+                Ok(JsValue::String(JsString::from(uuid)))
+            };
+
+            context
+                .register_global_callable("uuid", 0, NativeFunction::from_closure(uu_id_call))
                 .unwrap();
         };
 

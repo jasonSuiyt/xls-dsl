@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
 use chrono::Local;
@@ -55,9 +54,20 @@ pub(crate) async fn run(window: Window, id: i32)-> Result<String, String>{
     let mut parse = ParseXls {
         xls_path: file.xlx_template,
         js_content: file.code,
-        window: Arc::new(Mutex::new(window))
+        window: Arc::new(Mutex::new(window.clone()))
     };
-    let res = parse.invoke_script().await.unwrap();
-    Ok(res)
+
+    match parse.invoke_script().await {
+        Ok(res) => {
+            if res != "" || res != "null"{
+                window.emit("println", res.clone()).unwrap();
+            }
+            return Ok(res);
+        },
+        Err(err) => {
+            window.emit("println", err.to_string()).unwrap();
+            return Ok(err.to_string());
+        }, 
+    }
 }
 

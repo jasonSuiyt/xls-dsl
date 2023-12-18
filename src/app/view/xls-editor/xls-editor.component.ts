@@ -6,7 +6,6 @@ import {
     QueryList,
     ViewChild,
     ViewChildren,
-    signal,
     OnInit, inject
 } from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
@@ -19,7 +18,6 @@ import {MessageService} from 'src/app/service/message.service';
 import {open, ask} from '@tauri-apps/api/dialog';
 import {animate, sequence, state, style, transition, trigger} from '@angular/animations';
 import {invoke} from "@tauri-apps/api";
-import { formatDate } from '@angular/common';
 
 
 @Component({
@@ -83,50 +81,38 @@ export class XlsEditorComponent implements AfterViewInit, OnInit {
 
     ngAfterViewInit(): void {
 
-        this.splitEl.dragProgress$.subscribe(x => {
-            this.messageSrv.send({
-                type: MqType.SPLIT
-            })
-        });
-
-        this.splitPEl.dragProgress$.subscribe(x => {
-            this.messageSrv.send({
-                type: MqType.SPLIT
-            })
-        });
-
         this.messageSrv.onMessage(x => {
-
             switch (x.type) {
                 case MqType.LEFT_FOLD:
                     this.areasEl.first.expand();
-                    this.monacoEditor.onResize();
+                    this.monacoEditor.fitEidtor();
                     this.splitPEl.disabled = false;
                     break;
                 case MqType.LEFT_FOLD_OFF:
                     this.areasEl.first.collapse(0, 'left');
-                    this.monacoEditor.onResize();
+                    this.monacoEditor.fitEidtor();
                     this.splitPEl.disabled = true;
                     break;
                 case MqType.BOTTOM_FOLD:
                     this.areasEl.last.expand();
-                    this.monacoEditor.onResize();
+                    this.monacoEditor.fitEidtor();
                     this.splitEl.disabled = false;
                     break;
                 case MqType.BOTTOM_FOLD_OFF:
                     this.areasEl.last.collapse(0, 'left');
-                    this.monacoEditor.onResize();
+                    this.monacoEditor.fitEidtor();
                     this.splitEl.disabled = true;
                     break;
                 default:
             }
 
-
-        })
+        });
     }
 
     dragEnd($event: IOutputData) {
-
+        this.messageSrv.send({
+            type: MqType.SPLIT
+        })
     }
 
 

@@ -1,3 +1,4 @@
+import { languages } from './../../../../dist/xls-dsl/assets/monaco-editor/esm/metadata.d';
 import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
 import { IOutputData, SplitComponent } from 'angular-split';
@@ -7,6 +8,8 @@ import { MqType } from 'src/app/enums/mq-type';
 import { FileInfo } from 'src/app/modal/file-info';
 import { Message } from 'src/app/modal/message';
 import { MessageService } from 'src/app/service/message.service';
+import { debounceTime, fromEvent, throttleTime } from 'rxjs';
+
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -15,6 +18,8 @@ import { MessageService } from 'src/app/service/message.service';
   styleUrls: ['./monaco-editor.component.css']
 })
 export class MonacoEditorComponent implements OnInit, AfterViewInit {
+
+
 
   code!: string;
 
@@ -26,7 +31,7 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
       invoke<FileInfo>('get_by_id', { id: value }).then(file => {
         this.setVal(file.code as string);
       })
-    } 
+    }
   }
 
   editorOptions = { theme: 'vs-light', language: 'javascript', fontSize: 14, layout: true, locale: "zh-cn" };
@@ -44,9 +49,51 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
 
   constructor(public messageSrv: MessageService) { }
 
+ 
 
   onInit(editor: any) {
     this.editor = editor;
+    const monaco = (window as any).monaco;
+    const $this = this;
+    monaco.languages.registerCompletionItemProvider('javascript', {
+      triggerCharacters: ['.'],
+      provideCompletionItems: function (model: any, position: any, context: any, token: any) {
+        
+        const completionItemList = [
+          {
+            label: "data",
+            insertText: "data",
+            kind: "Variable",
+            detail: "xls读取的数据",
+            sortText: "1"
+          },
+          {
+            label: "uuid",
+            insertText: "uuid()",
+            kind: "Function",
+            detail: "生成uuid方法",
+            sortText: "1"
+          },
+          {
+            label: "snowid",
+            insertText: "snowid()",
+            kind: "Function",
+            detail: "生成雪花ID方法",
+            sortText: "1"
+          }
+        ];
+
+        const word = model.getWordUntilPosition(position);
+        const suggestions = completionItemList.filter((x: any)=>{
+          const flag  = x.label.concat(word);
+          return flag;
+        });
+
+        return {
+          suggestions: [...suggestions]
+        }
+      }
+    })
   }
 
   ngAfterViewInit(): void {
@@ -68,13 +115,19 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
     });
     this.messageSrv.onMessage(message => {
       if (message.type === MqType.SPLIT) {
-        this.onResize();
+        this.fitEidtor();
       }
     });
+
+    fromEvent(window, "resize").pipe(throttleTime(1000), debounceTime(1000)).subscribe(()=>{
+      console.log(1111);
+
+       this.fitEidtor();
+    })
   }
 
-  @HostListener('window:resize')
-  public onResize() {
+
+  public fitEidtor() {
     const editor = this.ngxMonacoEditor._editorContainer.nativeElement;
     editor.style.height = this.topView.nativeElement.clientHeight + 'px';
     this.editor.layout();
