@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "window": "cargo build --target x86_64-pc-windows-msvc"
   },
   "private": true,
   "dependencies": {
