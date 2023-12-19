@@ -4,12 +4,18 @@
         <div class="flex-none h-8  border-b-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)]">
             <div class=" h-full flex  justify-between items-center px-2">
                 <div class="flex items-center">
+                    @if (running) {
+                    <app-codicon color="rgb(34,197,94)" iconName="refresh" class=" animate-spin"
+                        fontSize="14"></app-codicon>
+                    }@else {
                     <app-codicon color="rgb(34,197,94)" (click)="play($event)" iconName="play" class="w-4 h-4"
                         fontSize="14"></app-codicon>
+                    }
                 </div>
 
-                <div>
-                    <app-codicon (click) = "copyClick($event)" iconName="copy" class="w-4 h-4 pr-2" fontSize="14"></app-codicon>
+                <div class="flex">
+                    <app-codicon (click)="copyClick($event)" iconName="copy" class="w-4 h-4 mr-2"
+                        fontSize="14"></app-codicon>
                     <app-codicon (click)="clear($event)" iconName="clear-all" class="w-4 h-4"
                         fontSize="14"></app-codicon>
                 </div>
@@ -17,17 +23,17 @@
             </div>
         </div>
         <div #cccc class="grow overflow-auto px-2 pb-2" [scrollTop]="cccc.scrollHeight">
-            <div #content></div>
+            <div #content class=" text-[12px]"></div>
             <div>
                 <div class="flex font-light items-center">
-                    <div class=" pr-1.5 text-green-500">xls-parser:~$</div>
-                    <div class=" text-green-500"> {{xterm.value}} </div>
+                    <div class=" pr-1.5 text-green-500 text-[12px]">xls-parser:~$</div>
+                    <div class=" text-green-500 text-[12px]"> {{xterm.value}} </div>
                     @if(xtermFocused){
                     <div #curser
                         class="h-4 w-1.5 inline-block bg-black dark:bg-white animate-[blinker_1s_linear_infinite]">
                     </div>
                     }@else{
-                    <div #curser class="h-4 w-1.5 inline-block dark:border-white border-[.5px]"></div>
+                    <div #curser class="h-4 w-1.5 inline-block dark:border-white border-[.5px] text-[12px]"></div>
                     }
                 </div>
             </div>

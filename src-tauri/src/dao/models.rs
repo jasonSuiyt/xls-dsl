@@ -31,3 +31,22 @@ pub struct NewFile {
     pub updated_date: Option<NaiveDateTime>
 }
 
+
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct RunLog {
+    pub log_type:String,
+    pub msg:String,
+}
+
+impl RunLog {
+    pub fn result(msg: String) -> Self{
+        RunLog { log_type: "result".to_string(), msg }
+    }
+
+    pub fn log(msg: String) -> Self{
+        RunLog { log_type: "log".to_string(), msg }
+    }
+}
+

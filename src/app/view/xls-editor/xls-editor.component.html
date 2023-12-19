@@ -23,10 +23,10 @@
                 <div class="overflow-auto">
                     @for (file of fileList; track $index) {
                     <div (contextmenu)="fileContextmenu($event, file)" #fileItem
-                        class="dark:text-[rgb(189,189,189)] hover:bg-[rgb(224,226,239)] hover:dark:bg-[rgb(48,48,53)]  select-none  text-black  text-[14px] flex items-stretch {{file.selected?'file-selected':''}}"
+                        class="dark:text-[rgb(189,189,189)] hover:bg-[rgb(224,226,239)] hover:dark:bg-[rgb(48,48,53)]  select-none  text-black  text-[14px] flex items-center {{file.selected?'file-selected':''}}"
                         (click)="fileClick($event, file)">
-                        <div class=" pl-2"><app-codicon iconName="file-code" fontSize="16px"></app-codicon></div>
-                        <div class=" w-1"></div> <label>{{file.name}}</label>
+                        <div class=" pl-2"><app-codicon iconName="file-code" fontSize="12px"></app-codicon></div>
+                        <div class=" w-1"></div> <label class="text-[12px]">{{file.name}}</label>
                     </div>
                     }
                 </div>

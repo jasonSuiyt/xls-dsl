@@ -4,7 +4,7 @@ use chrono::Local;
 use tauri::Window;
 
 use crate::dao::file_dao;
-use crate::dao::models::{File, NewFile};
+use crate::dao::models::{File, NewFile, RunLog};
 use crate::parse_xls::lib::ParseXls;
 
 #[tauri::command]
@@ -60,12 +60,12 @@ pub(crate) async fn run(window: Window, id: i32)-> Result<String, String>{
     match parse.invoke_script().await {
         Ok(res) => {
             if res != "" || res != "null"{
-                window.emit("println", res.clone()).unwrap();
+                window.emit("println", RunLog::result( res.clone())).unwrap();
             }
             return Ok(res);
         },
         Err(err) => {
-            window.emit("println", err.to_string()).unwrap();
+            window.emit("println",  RunLog::result( err.to_string())).unwrap();
             return Ok(err.to_string());
         }, 
     }

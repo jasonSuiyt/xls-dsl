@@ -1,14 +1,15 @@
-use std::future::Future;
 use std::sync::{Arc, Mutex};
 
 use anyhow::anyhow;
 use boa_engine::property::Attribute;
-use boa_engine::{Context, JsResult, JsString, JsValue, NativeFunction};
+use boa_engine::{Context, JsString, JsValue, NativeFunction};
 use boa_parser::Source;
 use calamine::{open_workbook, Reader, Xlsx};
 use lazy_static::lazy_static;
 use serde_json::{json, Map, Number, Value};
 use tauri::Window;
+
+use crate::dao::models::RunLog;
 
 lazy_static! {
     static ref COLUMN_INDEX: Vec<String> = column_index();
@@ -90,6 +91,7 @@ impl ParseXls {
 
         let mut context = Context::default();
         let window = self.window.clone();
+        let snow = sonyflake::Sonyflake::new().unwrap();
 
         unsafe {
             let println = move |_this: &JsValue, args: &[JsValue], _context: &mut Context<'_>| {
@@ -101,12 +103,12 @@ impl ParseXls {
                     let p = p.to_json(_context);
                     let v = p.clone().unwrap();
                     let w = window.lock();
-                    w.unwrap().emit("println", v.to_string()).unwrap();
+                    w.unwrap().emit("println", RunLog::log(v.to_string())).unwrap();
                 } else {
                     let p = p.to_string(_context);
                     let v = p.unwrap().to_std_string_escaped();
                     if let Ok(w) = window.lock() {
-                        if let Ok(_) = w.emit("println", v.clone()) {}
+                        if let Ok(_) = w.emit("println", RunLog::log(v.clone())) {}
                     }
                 }
                 drop(p);
@@ -118,7 +120,7 @@ impl ParseXls {
                 .unwrap();
 
             let snoyflake_id = move |_this: &JsValue, _: &[JsValue], _context: &mut Context<'_>| {
-                let next_id = sonyflake::Sonyflake::new().unwrap().next_id().unwrap();
+                let next_id = snow.next_id().unwrap();
                 Ok(JsValue::String(JsString::from(next_id.to_string())))
             };
 

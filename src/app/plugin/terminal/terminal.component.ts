@@ -4,6 +4,7 @@ import { Message } from 'src/app/modal/message';
 import { appWindow } from "@tauri-apps/api/window";
 import { writeText } from '@tauri-apps/api/clipboard';
 import { message } from '@tauri-apps/api/dialog';
+import { RunLog } from 'src/app/modal/run-log';
 
 
 @Component({
@@ -13,8 +14,7 @@ import { message } from '@tauri-apps/api/dialog';
 })
 export class TerminalComponent implements OnInit {
 
-
-  playOn: boolean = false;
+  running: boolean = false;
 
 
   @ViewChild("xterm") xterm!: ElementRef;
@@ -65,9 +65,13 @@ export class TerminalComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await appWindow.listen('println', (data) => {
-      this.setAMsg(data.payload as string);
-      this.logRes.push(data.payload as string);
+    await appWindow.listen<RunLog>('println', (data) => {
+      const res = data.payload;
+      this.setAMsg(res.msg);
+      this.logRes.push(res.msg);
+      if(res.logType === "result") {
+          this.running = false;
+      }
     });
   }
 
@@ -83,9 +87,13 @@ export class TerminalComponent implements OnInit {
   }
 
   play($event: MouseEvent) {
+    this.running = true;
     this.setQMsg("run");
     this.runClick.emit("run");
     this.logRes = [];
+    setTimeout(()=>{
+      this.running = false;
+    },10000)
   }
 
   clear($event: MouseEvent) {
