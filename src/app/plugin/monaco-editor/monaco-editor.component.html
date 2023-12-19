@@ -1,4 +1,11 @@
-<div #topView class=" bg-[#1E1F22] h-full w-full">
+<div #topView class="h-full w-full">
+
+    @if(!select_id) {
+        <div class=" w-full h-full z-20 flex justify-center items-center">
+             <label class=" text-2xl dark:text-gray-400 font-extralight animate-bounce">选择文件进行编辑</label>
+        </div>
+    }
+    
     <ngx-monaco-editor class="my-code-editor" #ngxMonacoEditor [options]="editorOptions" (ngModelChange)="codeChange($event)" [(ngModel)]="code"
         (onInit)="onInit($event)"></ngx-monaco-editor>
 </div>
