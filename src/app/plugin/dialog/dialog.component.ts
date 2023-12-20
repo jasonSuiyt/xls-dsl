@@ -1,5 +1,5 @@
 import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-dialog',
@@ -45,6 +45,20 @@ export class DialogComponent{
 
   public setTitle(title:string){
     this.title = title;
+  }
+
+  @HostListener('click', ['$event.target'])
+  onClick(target: HTMLElement): void {
+    if (target.matches('.dialog-overlay')) {
+      this.close();
+    }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  onEscape(event: KeyboardEvent): void {
+    if (event.code === 'Escape') {
+      this.close();
+    }
   }
 
 

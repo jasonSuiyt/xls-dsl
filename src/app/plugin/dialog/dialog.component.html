@@ -1,7 +1,7 @@
 <div class="relative z-10"  [style.display]="visble?'block':'none'" aria-labelledby="modal-title"
   role="dialog" aria-modal="true">
   <div class="fixed inset-0  bg-gray-500 bg-opacity-75 transition-opacity"></div>
-  <div class="fixed inset-0 z-10 w-screen h-screen overflow-y-auto flex justify-center items-center">
+  <div class="fixed inset-0 z-10 w-screen h-screen overflow-y-auto flex justify-center items-center dialog-overlay">
     <div #dialog style="width: 500px;" cdkDrag [@openClose]="visble"
       class="  bg-white text-left  fixed   sm:my-8  dark:bg-[rgb(30,30,30)] rounded-sm shadow-lg shadow-gray-600 dark:shadow-black">
       <div cdkDragHandle
