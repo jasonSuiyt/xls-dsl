@@ -5,7 +5,6 @@ import { EditorComponent, NgxEditorModel } from 'ngx-monaco-editor';
 import { MessageType } from 'src/app/enums/message-type';
 import { MqType } from 'src/app/enums/mq-type';
 import { FileInfo } from 'src/app/modal/file-info';
-import { Message } from 'src/app/modal/message';
 import { MessageService } from 'src/app/service/message.service';
 import { debounceTime, fromEvent, throttleTime } from 'rxjs';
 

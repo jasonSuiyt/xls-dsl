@@ -23,7 +23,15 @@
             </div>
         </div>
         <div #cccc class="grow overflow-auto px-2 pb-2" [scrollTop]="cccc.scrollHeight">
-            <div #content class=" text-[12px]"></div>
+            <div #content class=" text-[12px] pr-1.5">
+                @for (item of message; track $index) {
+                    @if (item.type == "Q") {
+                        <pre class="text-green-500">xls-parser:~$ {{item.message}}</pre>
+                    }@else {
+                        <pre class="text-black dark:text-white">{{item.message}}</pre>
+                    }
+                }
+            </div>
             <div>
                 <div class="flex font-light items-center">
                     <div class=" pr-1.5 text-green-500 text-[12px]">xls-parser:~$</div>

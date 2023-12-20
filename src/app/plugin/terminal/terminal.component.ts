@@ -16,7 +16,6 @@ export class TerminalComponent implements OnInit {
 
   running: boolean = false;
 
-
   @ViewChild("xterm") xterm!: ElementRef;
 
   @ViewChild("xtermView") xtermView!: ElementRef;
@@ -27,50 +26,38 @@ export class TerminalComponent implements OnInit {
 
   @ViewChild("content") content!: ElementRef;
 
-  logRes = Array<string>();
 
   xtermFocused = false;
 
   xtermValue: string = '';
 
+  message = Array<Message>();
+
   xtermViewML() {
-    console.log("xtermViewML")
     this.xterm.nativeElement.blur();
     this.xtermFocused = false;
   }
 
   public setQMsg(msg: string) {
-    const content = this.content.nativeElement as HTMLInputElement
-    let div = document.createElement("pre");
-    div.classList.add("pr-1.5");
-    div.classList.add("text-green-500");
-    div.innerHTML = "xls-parser:~$ " + msg
-    content.append(div);
+    console.log(msg);
+    
+    this.message.push(Message.q(msg));
   }
 
   public setAMsg(msg: string) {
-    const content = this.content.nativeElement as HTMLInputElement;
-    if (content) {
-      const divs = content.getElementsByTagName("pre");
-      if(divs.length > 1500){
-        content.removeChild(divs[0]);
-      }
-    }
- 
-    let div = document.createElement("pre");
-    div.classList.add("text-black");
-    div.classList.add("dark:text-white");
-    div.innerHTML = msg;
-    content.append(div);
+    console.log(msg);
+    this.message.push(Message.a(msg));
   }
 
   async ngOnInit(): Promise<void> {
     await appWindow.listen<RunLog>('println', (data) => {
       const res = data.payload;
       this.setAMsg(res.msg);
-      this.logRes.push(res.msg);
       if(res.logType === "result") {
           this.running = false;
+          this.xterm.nativeElement.blur();
+          this.xterm.nativeElement.focus();
+          this.xtermFocused = true;
       }
     });
   }
@@ -87,19 +74,18 @@ export class TerminalComponent implements OnInit {
   }
 
   async play($event: MouseEvent) {
+    this.message = []
     this.running = true;
     this.setQMsg("run");
     this.runClick.emit("run");
-    this.logRes = [];
     setTimeout(()=>{
       this.running = false;
     },10000)
   }
 
   async clear($event: MouseEvent) {
+    this.message = [];
     this.setQMsg("clear");
-    const content = this.content.nativeElement as HTMLInputElement;
-    content.innerHTML = "";
   }
 
 
@@ -113,11 +99,10 @@ export class TerminalComponent implements OnInit {
           this.setAMsg("clear&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;清屏")
           break
         case "clear":
-          const content = this.content.nativeElement as HTMLInputElement;
-          content.innerHTML = "";
+          this.message = [];
           break
         case "run":
-          this.logRes = [];
+          this.message = [];
           this.runClick.emit("run");
           break
         default:
@@ -129,7 +114,7 @@ export class TerminalComponent implements OnInit {
 
 
   async copyClick($event: MouseEvent) {
-    const copyText = this.logRes.join("\n");
+    const copyText = this.message.filter(x=>x.type === MessageType.A).map(x=>x.message).join("\n");
     await writeText(copyText);
     await message("复制成功");
   }
