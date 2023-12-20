@@ -86,7 +86,7 @@ export class TerminalComponent implements OnInit {
     $event.preventDefault();
   }
 
-  play($event: MouseEvent) {
+  async play($event: MouseEvent) {
     this.running = true;
     this.setQMsg("run");
     this.runClick.emit("run");
@@ -96,7 +96,7 @@ export class TerminalComponent implements OnInit {
     },10000)
   }
 
-  clear($event: MouseEvent) {
+  async clear($event: MouseEvent) {
     this.setQMsg("clear");
     const content = this.content.nativeElement as HTMLInputElement;
     content.innerHTML = "";
