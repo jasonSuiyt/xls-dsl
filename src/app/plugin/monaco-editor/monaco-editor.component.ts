@@ -9,7 +9,6 @@ import { Message } from 'src/app/modal/message';
 import { MessageService } from 'src/app/service/message.service';
 import { debounceTime, fromEvent, throttleTime } from 'rxjs';
 
-
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-monaco-editor',
@@ -33,7 +32,21 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
     }
   }
 
-  editorOptions = { theme: 'vs-light', language: 'javascript', fontSize: 14, layout: true, locale: "zh-cn" };
+  editorOptions = {
+    theme: 'vs-light',
+    language: 'javascript',
+    fontSize: 14,
+    layout: true,
+    locale: "zh-cn",
+    scrollbar: {
+      useShadows: true,
+      verticalHasArrows: false,
+      horizontalHasArrows: false,
+      verticalScrollbarSize: 10,
+      horizontalScrollbarSize: 10,
+      arrowSize: 10,
+    },
+  };
 
 
   @ViewChild("xtermView") xtermView!: ElementRef;
@@ -48,43 +61,58 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
 
   constructor(public messageSrv: MessageService) { }
 
- 
+
 
   onInit(editor: any) {
     this.editor = editor;
     const monaco = (window as any).monaco;
     const $this = this;
+ 
     monaco.languages.registerCompletionItemProvider('javascript', {
       triggerCharacters: ['.'],
       provideCompletionItems: function (model: any, position: any, context: any, token: any) {
-        
         const completionItemList = [
           {
             label: "data",
             insertText: "data",
-            kind: "Variable",
+            kind: monaco.languages.CompletionItemKind.Variable,
             detail: "xls读取的数据",
             sortText: "1"
           },
           {
             label: "uuid",
             insertText: "uuid()",
-            kind: "Function",
+            kind:  monaco.languages.CompletionItemKind.Function,
             detail: "生成uuid方法",
             sortText: "1"
           },
           {
             label: "snowid",
             insertText: "snowid()",
-            kind: "Function",
+            kind:  monaco.languages.CompletionItemKind.Function,
             detail: "生成雪花ID方法",
             sortText: "1"
+          },
+          {
+            label: "println",
+            insertText: "println()",
+            insertTextRules: "CompletionItemInsertTextRule",
+            kind: monaco.languages.CompletionItemKind.Function,
+            detail: "打印输出消息",
+            sortText: "1",
+          },
+          {
+            label: "fori",
+            insertText: 'for(let i=0;i<${1:}.length;i++){\n${2:}\n}',
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            detail: "fori",
+            sortText: "1",
           }
         ];
 
         const word = model.getWordUntilPosition(position);
-        const suggestions = completionItemList.filter((x: any)=>{
-          const flag  = x.label.concat(word);
+        const suggestions = completionItemList.filter((x: any) => {
+          const flag = x.label.concat(word);
           return flag;
         });
 
@@ -118,10 +146,10 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
       }
     });
 
-    fromEvent(window, "resize").pipe(throttleTime(1000), debounceTime(1000)).subscribe(()=>{
+    fromEvent(window, "resize").pipe(throttleTime(1000), debounceTime(1000)).subscribe(() => {
       console.log(1111);
 
-       this.fitEidtor();
+      this.fitEidtor();
     })
   }
 
