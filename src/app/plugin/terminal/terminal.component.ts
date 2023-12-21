@@ -95,8 +95,8 @@ export class TerminalComponent implements OnInit {
       this.setQMsg(this.xtermValue);
       switch (this.xtermValue) {
         case "help":
-          this.setAMsg("run&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;运行代码");
-          this.setAMsg("clear&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;清屏")
+          this.setAMsg("run       运行代码");
+          this.setAMsg("clear     清屏")
           break
         case "clear":
           this.message = [];

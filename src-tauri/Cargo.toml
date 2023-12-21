@@ -18,7 +18,7 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 boa_engine = "0.17.3"
 reqwest = { version = "0.11.22", features = ["json", "cookies", "stream"] }
-calamine = "0.22.1"
+calamine = "0.23.1"
 anyhow = "1.0.75"
 actix-rt = "2.9.0"
 boa_parser = "0.17.3"
