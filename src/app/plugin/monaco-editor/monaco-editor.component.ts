@@ -94,8 +94,8 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
           },
           {
             label: "println",
-            insertText: "println()",
-            insertTextRules: "CompletionItemInsertTextRule",
+            insertText: "println(${1:})",
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             kind: monaco.languages.CompletionItemKind.Function,
             detail: "打印输出消息",
             sortText: "1",
