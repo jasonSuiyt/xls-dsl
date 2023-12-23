@@ -1,5 +1,3 @@
-use std::sync::{Arc, Mutex};
-
 use chrono::Local;
 use tauri::Window;
 
@@ -54,7 +52,6 @@ pub(crate) async fn run(window: Window, id: i32)-> Result<String, String>{
     let mut parse = ParseXls {
         xls_path: file.xlx_template,
         js_content: file.code,
-        window: Arc::new(Mutex::new(window.clone()))
     };
 
     match parse.invoke_script().await {

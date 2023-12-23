@@ -64,11 +64,9 @@ impl Trie {
     // 查询
     pub fn search(&self, word: String)->bool{
         let mut tmp = self.root.clone();
-        let mut i =1;
         for c in word.chars(){
             let n = tmp.borrow().next.get(&c).cloned();
             if let Some(no) = n {
-                i+=1;
                 tmp = no.clone();
             } else {
                 return false;
@@ -83,11 +81,9 @@ impl Trie {
     // 查询
     pub fn start_with(&self, word: String)->bool{
         let mut tmp = self.root.clone();
-        let mut i =1;
         for c in word.chars(){
             let n = tmp.borrow().next.get(&c).cloned();
             if let Some(no) = n {
-                i+=1;
                 tmp = no.clone();
             } else {
                 return false;

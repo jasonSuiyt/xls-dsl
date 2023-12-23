@@ -1,14 +1,13 @@
-use std::sync::{Arc, Mutex};
-
 use anyhow::anyhow;
-use boa_engine::property::Attribute;
 use boa_engine::{Context, JsString, JsValue, NativeFunction};
+use boa_engine::property::Attribute;
 use boa_parser::Source;
 use calamine::{open_workbook, Reader, Xlsx};
+use chrono::format;
 use lazy_static::lazy_static;
 use serde_json::{json, Map, Number, Value};
-use tauri::Window;
 
+use crate::APP;
 use crate::dao::models::RunLog;
 
 lazy_static! {
@@ -37,7 +36,6 @@ fn column_index() -> Vec<String> {
 pub(crate) struct ParseXls {
     pub xls_path: String,
     pub js_content: String,
-    pub window: Arc<Mutex<Window>>,
 }
 
 impl ParseXls {
@@ -90,26 +88,23 @@ impl ParseXls {
         let result = self.read_all()?;
 
         let mut context = Context::default();
-        let window = self.window.clone();
         let snow = sonyflake::Sonyflake::new().unwrap();
 
         unsafe {
             let println = move |_this: &JsValue, args: &[JsValue], _context: &mut Context<'_>| {
                 let arg: Option<JsValue> = args.get(0).cloned();
-
+                let app = APP.lock().unwrap();
+                let w = app.get("window");
                 let p: JsValue = arg.clone().unwrap();
 
                 if p.is_object() {
                     let p = p.to_json(_context);
                     let v = p.clone().unwrap();
-                    let w = window.lock();
                     w.unwrap().emit("println", RunLog::log(v.to_string())).unwrap();
                 } else {
                     let p = p.to_string(_context);
                     let v = p.unwrap().to_std_string_escaped();
-                    if let Ok(w) = window.lock() {
-                        if let Ok(_) = w.emit("println", RunLog::log(v.clone())) {}
-                    }
+                    if let Ok(_) = w.unwrap().emit("println", RunLog::log(v.clone())) {}
                 }
                 drop(p);
                 drop(arg);
@@ -136,9 +131,27 @@ impl ParseXls {
             context
                 .register_global_callable("uuid", 0, NativeFunction::from_closure(uu_id_call))
                 .unwrap();
-        };
 
-        // context.register_global_callable("println", length, body)
+
+            let md5_call = move |_this: &JsValue, args: &[JsValue], _context: &mut Context<'_>| {
+                let arg: Option<JsValue> = args.get(0).cloned();
+                if let Some(ref arg1) = arg{
+                    let p: JsValue = arg.clone().unwrap();
+                    if let Ok(res) = p.to_string(_context){
+                        let arg1_val = res.to_std_string_escaped();
+                        let md5_val = format!("{:x}", md5::compute(arg1_val));
+                        drop(arg);
+                        return Ok(JsValue::String(md5_val.into()));
+                    }
+                }
+                drop(arg);
+                Ok(JsValue::Undefined)
+            };
+
+            context
+                .register_global_callable("md5", 1, NativeFunction::from_closure(md5_call))
+                .unwrap();
+        };
 
         let value = JsValue::from_json(&result, &mut context).unwrap();
 
@@ -155,3 +168,38 @@ impl ParseXls {
         }
     }
 }
+
+
+// #[cfg(test)]
+// mod tests {
+//     use deno_core::{JsRuntime, RuntimeOptions, serde_v8};
+//     use deno_core::_ops::serde_v8_to_rust;
+//     use deno_core::v8::Local;
+//
+//     #[test]
+//     fn test_v8() {
+//         let options = RuntimeOptions::default();
+//         let mut rt = JsRuntime::new(options);
+//
+//         let code = r#"
+//             let name = {
+//                 name: "zhangsan",
+//                 age: 23
+//             };
+//             console.log(name);
+//             name
+//         "#;
+//         let global = rt.execute_script("", deno_core::FastString::Static(code)).unwrap();
+//         let mut scope = rt.handle_scope();
+//         let value = global.open(&mut scope);
+//         if value.is_object(){
+//             let local = value.to_object(&mut scope).unwrap();
+//             // println!("{:?}", obj.to_(&mut scope));
+//             let value1 = serde_v8::from_v8::<serde_json::Value>(&mut scope, local.into()).unwrap();
+//             println!("{:?}", value1.to_string())
+//         }
+//         let value_str = value.to_rust_string_lossy(&mut scope);
+//         println!("{}", value_str);
+//
+//     }
+// }

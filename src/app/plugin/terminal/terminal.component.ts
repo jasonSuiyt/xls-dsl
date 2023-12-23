@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { MessageType } from 'src/app/enums/message-type';
 import { Message } from 'src/app/modal/message';
 import { appWindow } from "@tauri-apps/api/window";
@@ -38,14 +38,11 @@ export class TerminalComponent implements OnInit {
     this.xtermFocused = false;
   }
 
-  public setQMsg(msg: string) {
-    console.log(msg);
-    
+  public setQMsg(msg: string) {    
     this.message.push(Message.q(msg));
   }
 
   public setAMsg(msg: string) {
-    console.log(msg);
     this.message.push(Message.a(msg));
   }
 
@@ -90,8 +87,7 @@ export class TerminalComponent implements OnInit {
 
 
   xtermKeyDown(event: KeyboardEvent) {
-    if (event.keyCode === 13) {
-
+    if (event.key === "Enter") {
       this.setQMsg(this.xtermValue);
       switch (this.xtermValue) {
         case "help":
@@ -100,9 +96,11 @@ export class TerminalComponent implements OnInit {
           break
         case "clear":
           this.message = [];
+          this.setQMsg("clear")
           break
         case "run":
           this.message = [];
+          this.setQMsg("run")
           this.runClick.emit("run");
           break
         default:

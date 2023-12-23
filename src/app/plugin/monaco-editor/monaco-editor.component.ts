@@ -93,6 +93,14 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
             sortText: "1"
           },
           {
+            label: "md5",
+            insertText: "md5(${1:})",
+            insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+            kind: monaco.languages.CompletionItemKind.Function,
+            detail: "md5",
+            sortText: "1",
+          },
+          {
             label: "println",
             insertText: "println(${1:})",
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
