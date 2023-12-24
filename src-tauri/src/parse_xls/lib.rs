@@ -40,7 +40,7 @@ pub(crate) struct ParseXls {
 
 impl ParseXls {
     /// read xls function
-    fn read_all(&mut self) -> anyhow::Result<Value> {
+    pub fn read_all(&mut self) -> anyhow::Result<Value> {
         let mut workbook: Xlsx<_> = open_workbook(self.xls_path.as_str())?;
 
         match workbook.worksheets().first() {

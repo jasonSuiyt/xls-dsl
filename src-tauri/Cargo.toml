@@ -32,6 +32,10 @@ diesel_migrations = "2.1.0"
 dirs = "5.0.1"
 sonyflake = "0.2.0"
 uuid = {version = "1.6.1", features = ["v4"] }
+md5 = "0.7.0"
+v8 = "0.82.0"
+serde_v8 = "0.147.0"
+#deno_core = "0.238.0"
 
 [dependencies.rusqlite]
 version = "0.30.0"
