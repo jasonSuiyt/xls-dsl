@@ -1,10 +1,8 @@
 use chrono::Local;
-use tauri::Window;
 
 use crate::dao::file_dao;
-use crate::dao::models::{File, NewFile, RunLog};
-use crate::parse_xls::lib::ParseXls;
-use crate::v8::lib::run_script;
+use crate::dao::models::{File, NewFile};
+use crate::v8::lib::V8Runtime;
 
 #[tauri::command]
 pub(crate) fn find_all_file() -> Vec<File> {
@@ -14,8 +12,6 @@ pub(crate) fn find_all_file() -> Vec<File> {
 
 #[tauri::command]
 pub(crate) fn add_file(new_file: NewFile)-> File  {
-    println!("new_file: {:?}", new_file);
-    
     file_dao::insert(NewFile { created_date: Some(Local::now().naive_local()), updated_date: Some(Local::now().naive_local()), ..new_file }).unwrap()
 }
 
@@ -47,31 +43,13 @@ pub(crate) fn get_by_id(id: i32)-> File{
 
 
 #[tauri::command]
-pub(crate) async fn run(window: Window, id: i32)-> Result<String, String>{
-
-
+pub(crate) async fn run(id: i32) -> Result<String, String>{
  
     let file  = file_dao::get_by_id(id).expect("id not found");
 
-    run_script(file.code, file.xlx_template);
+    let v8_runtime = V8Runtime::new(file.code, file.xlx_template);
 
-    // let mut parse = ParseXls {
-    //     xls_path: file.xlx_template,
-    //     js_content: file.code,
-    // };
-    //
-    // match parse.invoke_script().await {
-    //     Ok(res) => {
-    //         if res != "" || res != "null"{
-    //             window.emit("println", RunLog::result( res.clone())).unwrap();
-    //         }
-    //         return Ok(res);
-    //     },
-    //     Err(err) => {
-    //         window.emit("println",  RunLog::result( err.to_string())).unwrap();
-    //         return Ok(err.to_string());
-    //     },
-    // }
+    v8_runtime.run_script();
 
     Ok("success".to_string())
 }

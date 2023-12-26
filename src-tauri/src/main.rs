@@ -12,7 +12,6 @@ use handlers::handler;
 use crate::dao::db;
 use core::result::Result::Ok;
 use std::collections::HashMap;
-use std::env;
 use std::sync::Mutex;
 use lazy_static::lazy_static;
 use tauri::{Manager, Window};
