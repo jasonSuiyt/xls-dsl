@@ -4,6 +4,7 @@ use tauri::Window;
 use crate::dao::file_dao;
 use crate::dao::models::{File, NewFile, RunLog};
 use crate::parse_xls::lib::ParseXls;
+use crate::v8::lib::run_script;
 
 #[tauri::command]
 pub(crate) fn find_all_file() -> Vec<File> {
@@ -47,24 +48,31 @@ pub(crate) fn get_by_id(id: i32)-> File{
 
 #[tauri::command]
 pub(crate) async fn run(window: Window, id: i32)-> Result<String, String>{
+
+
  
     let file  = file_dao::get_by_id(id).expect("id not found");
-    let mut parse = ParseXls {
-        xls_path: file.xlx_template,
-        js_content: file.code,
-    };
 
-    match parse.invoke_script().await {
-        Ok(res) => {
-            if res != "" || res != "null"{
-                window.emit("println", RunLog::result( res.clone())).unwrap();
-            }
-            return Ok(res);
-        },
-        Err(err) => {
-            window.emit("println",  RunLog::result( err.to_string())).unwrap();
-            return Ok(err.to_string());
-        }, 
-    }
+    run_script(file.code, file.xlx_template);
+
+    // let mut parse = ParseXls {
+    //     xls_path: file.xlx_template,
+    //     js_content: file.code,
+    // };
+    //
+    // match parse.invoke_script().await {
+    //     Ok(res) => {
+    //         if res != "" || res != "null"{
+    //             window.emit("println", RunLog::result( res.clone())).unwrap();
+    //         }
+    //         return Ok(res);
+    //     },
+    //     Err(err) => {
+    //         window.emit("println",  RunLog::result( err.to_string())).unwrap();
+    //         return Ok(err.to_string());
+    //     },
+    // }
+
+    Ok("success".to_string())
 }
 

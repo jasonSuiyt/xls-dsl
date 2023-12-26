@@ -72,13 +72,6 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
       provideCompletionItems: function (model: any, position: any, context: any, token: any) {
         const completionItemList = [
           {
-            label: "data",
-            insertText: "data",
-            kind: monaco.languages.CompletionItemKind.Variable,
-            detail: "xls读取的数据",
-            sortText: "1"
-          },
-          {
             label: "uuid",
             insertText: "uuid()",
             kind:  monaco.languages.CompletionItemKind.Function,
@@ -90,6 +83,13 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
             insertText: "snowid()",
             kind:  monaco.languages.CompletionItemKind.Function,
             detail: "生成雪花ID方法",
+            sortText: "1"
+          },
+          {
+            label: "read_xls",
+            insertText: "read_xls()",
+            kind:  monaco.languages.CompletionItemKind.Function,
+            detail: "获取xls数据方法",
             sortText: "1"
           },
           {
