@@ -21,6 +21,7 @@ lazy_static! {
 }
 static INITIALIZE_V8: Once = Once::new();
 
+#[derive(Clone)]
 pub(crate) struct V8Runtime {
     code: String,
     xls_path: String,
@@ -45,7 +46,6 @@ impl V8Runtime {
         let scope = &mut HandleScope::new(isolate);
 
         let object_template = ObjectTemplate::new(scope);
-
 
         V8Runtime::add_md5_fun(scope, object_template);
         V8Runtime::add_snow_id_fun(scope, object_template);
