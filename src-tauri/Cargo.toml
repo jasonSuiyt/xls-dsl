@@ -16,13 +16,9 @@ tauri-build = { version = "1.5.0", features = [] }
 tauri = { version = "1.4.3", features = [ "macos-private-api", "dialog-message", "clipboard-all", "dialog-ask", "dialog-open", "window-all", "shell-open"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-#boa_engine = "0.17.3"
 calamine = "0.23.1"
 anyhow = "1.0.75"
 actix-rt = "2.9.0"
-#boa_parser = "0.17.3"
-#boa_interner = "0.17.3"
-#boa_ast = "0.17.3"
 lazy_static = "1.4.0"
 diesel = {version = "2.1.4", features = ["sqlite", "chrono"] }
 chrono = {version = "0.4.31", features = ["serde"] }
@@ -33,15 +29,7 @@ sonyflake = "0.2.0"
 uuid = {version = "1.6.1", features = ["v4"] }
 md5 = "0.7.0"
 v8 = "0.82.0"
-serde_v8 = "0.147.0"
-#deno_core = "0.238.0"
-
-[dependencies.rusqlite]
-version = "0.30.0"
-features = ["bundled"]
-
-[dependencies.pnet]
-version = "0.34.0"
+serde_v8 = "0.148.0"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem
