@@ -70,6 +70,39 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
     monaco.languages.registerCompletionItemProvider('javascript', {
       triggerCharacters: ['.'],
       provideCompletionItems: function (model: any, position: any, context: any, token: any) {
+
+        const line = position.lineNumber
+        const content = model.getLineContent(line).trim();
+        console.log(content)
+        if(content.endsWith(".")){
+          let pre = content.split(".")[0];
+          console.log(pre)
+          if(pre === "fs"){
+            const completionItemList = [
+              {
+                label: "create",
+                insertText: "create(${1:file})",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                kind: monaco.languages.CompletionItemKind.Function,
+                detail: "创建文件",
+                sortText: "1"
+              },
+              {
+                label: "append",
+                insertText: "append(${1:fileName},${2:str})",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                kind: monaco.languages.CompletionItemKind.Function,
+                detail: "对文件进行文本追加",
+                sortText: "1"
+              }
+            ];
+
+            return {
+              suggestions: [...completionItemList]
+            }
+          }
+        }
+
         const completionItemList = [
           {
             label: "uuid",
@@ -114,10 +147,18 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             detail: "fori",
             sortText: "1",
+          },
+          {
+            label: "xlsName",
+            insertText: 'xlsName',
+            kind: monaco.languages.CompletionItemKind.Variable,
+            detail: "文件名称",
+            sortText: "1",
           }
         ];
 
         const word = model.getWordUntilPosition(position);
+        console.log(word)
         const suggestions = completionItemList.filter((x: any) => {
           const flag = x.label.concat(word);
           return flag;

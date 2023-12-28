@@ -1,6 +1,10 @@
 use lazy_static::lazy_static;
 use std::sync::{Mutex, Once};
 use std::collections::HashMap;
+use std::fs;
+use std::fs::File;
+use std::io::Write;
+use std::path::Path;
 use std::time::Duration;
 use serde_json::Value;
 use serde_v8::Serializable;
@@ -40,18 +44,23 @@ impl V8Runtime {
         }
     }
     pub fn run_script(self) {
-        PATH.lock().unwrap().insert("path".to_string(), self.xls_path);
+        let xls_path = self.xls_path.clone();
+        let file_name = Path::new(&xls_path).file_name().unwrap();
+        PATH.lock().unwrap().insert("path".to_string(), xls_path.clone());
 
         let isolate = &mut v8::Isolate::new(Default::default());
         let scope = &mut HandleScope::new(isolate);
 
         let object_template = ObjectTemplate::new(scope);
+        object_template.set(v8::String::new(scope, "xlsName").unwrap().into(), v8::String::new(scope, file_name.to_str().unwrap()).unwrap().into());
 
         V8Runtime::add_md5_fun(scope, object_template);
         V8Runtime::add_snow_id_fun(scope, object_template);
         V8Runtime::set_read_xls_fun(scope, object_template);
         V8Runtime::add_println_fun(scope, object_template);
         V8Runtime::add_uuid_fun(scope, object_template);
+
+        V8Runtime::file_fun(scope, object_template);
 
         let context = v8::Context::new_from_template(scope, object_template);
         let scope = &mut v8::ContextScope::new(scope, context);
@@ -164,6 +173,40 @@ impl V8Runtime {
         let name = v8::String::new(scope, "uuid").unwrap();
         let snow_id_function = FunctionTemplate::new(scope, uuid_id_callback);
         object_template.set(name.into(), snow_id_function.into());
+    }
+
+
+    fn file_fun(scope: &mut HandleScope<()>, object_template: Local<ObjectTemplate>) {
+        let create_file_callback = |scope: &mut HandleScope, args: FunctionCallbackArguments, mut res: ReturnValue| {
+            let i = args.length();
+            if i>0 {
+                let arg = args.get(0);
+                let file = arg.to_rust_string_lossy(scope);
+                let path = Path::new(&file);
+                let dir = path.parent().unwrap();
+                fs::create_dir_all(dir).unwrap();
+                File::create(file).unwrap();
+            }
+        };
+        let append_str_callback = |scope: &mut HandleScope, args: FunctionCallbackArguments, mut res: ReturnValue| {
+            let i = args.length();
+            if i>1 {
+                let arg1 = args.get(0);
+                let arg2 = args.get(1);
+                let path = arg1.to_rust_string_lossy(scope);
+                let str = arg2.to_rust_string_lossy(scope);
+                let mut file = fs::OpenOptions::new().append(true).open(path).unwrap();
+                file.write_all(str.as_bytes()).unwrap();
+            }
+        };
+
+        let file = ObjectTemplate::new(scope);
+        file.set( v8::String::new(scope, "append").unwrap().into(), FunctionTemplate::new(scope, append_str_callback).into());
+        file.set( v8::String::new(scope, "create").unwrap().into(), FunctionTemplate::new(scope, create_file_callback).into());
+
+        let file_name = v8::String::new(scope, "fs").unwrap();
+        object_template.set(file_name.into(), file.into());
+
     }
 
 
