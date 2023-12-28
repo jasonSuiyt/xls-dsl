@@ -75,9 +75,6 @@ export class TerminalComponent implements OnInit {
     this.running = true;
     this.setQMsg("run");
     this.runClick.emit("run");
-    setTimeout(()=>{
-      this.running = false;
-    },10000)
   }
 
   async clear($event: MouseEvent) {
