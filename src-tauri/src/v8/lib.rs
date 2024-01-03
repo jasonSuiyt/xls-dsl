@@ -119,7 +119,7 @@ impl V8Runtime {
         let function = |scope: &mut HandleScope, args: FunctionCallbackArguments, _: ReturnValue| {
             let arg = args.get(0);
             if let Some(w) = APP.lock().unwrap().get("window") {
-                std::thread::sleep(Duration::from_millis(1));
+                // std::thread::sleep(Duration::from_millis(1));
                 if arg.is_string() {
                     w.emit("println", RunLog::log(arg.to_rust_string_lossy(scope))).unwrap();
                 } else {
