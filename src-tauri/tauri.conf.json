@@ -1,7 +1,7 @@
 {
   "build": {
-    "beforeDevCommand": "pnpm start --port 1420",
     "beforeBuildCommand": "pnpm build",
+    "beforeDevCommand": "pnpm start --port 1420",
     "devPath": "http://localhost:1420",
     "distDir": "../dist/xls-dsl",
     "withGlobalTauri": false
@@ -10,66 +10,39 @@
     "productName": "xls-dsl",
     "version": "0.0.0"
   },
+  "plugins": {
+    "shell": {
+      "open": true
+    }
+  },
   "tauri": {
-    "macOSPrivateApi": true,
-    "allowlist": {
-      "all": false,
-      "clipboard":{
-        "all": true,
-        "readText": true,
-        "writeText": true
-      },
-      "shell": {
-        "all": false,
-        "open": true
-      },
-      "window": {
-        "all": true,
-        "close": false,
-        "hide": true,
-        "show": true,
-        "maximize": true,
-        "minimize": true,
-        "unmaximize": true,
-        "unminimize": true,
-        "startDragging": true,
-        "setClosable": false
-      },
-      "dialog": {
-        "all": false,
-        "ask": true,
-        "confirm": false,
-        "message": true,
-        "open": true,
-        "save": false
-      }
-    },
     "bundle": {
       "active": true,
-      "targets": "all",
-      "identifier": "jasonsui",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
         "icons/128x128@2x.png",
         "icons/icon.icns",
         "icons/icon.ico"
-      ]
+      ],
+      "identifier": "jasonsui",
+      "targets": "all"
     },
+    "macOSPrivateApi": true,
     "security": {
       "csp": null
     },
     "windows": [
       {
         "fullscreen": false,
-        "resizable": true,
-        "title": "",
-        "width": 1280,
         "height": 750,
         "minHeight": 380,
         "minWidth": 750,
+        "resizable": true,
+        "title": "",
         "titleBarStyle": "Overlay",
-        "transparent": true
+        "transparent": true,
+        "width": 1280
       }
     ]
   }

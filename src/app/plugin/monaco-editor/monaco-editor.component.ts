@@ -1,5 +1,5 @@
 import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { IOutputData, SplitComponent } from 'angular-split';
 import { EditorComponent, NgxEditorModel } from 'ngx-monaco-editor';
 import { MessageType } from 'src/app/enums/message-type';

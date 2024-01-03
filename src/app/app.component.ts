@@ -1,5 +1,5 @@
 import {  AfterViewInit, Component, HostListener, ViewChild } from "@angular/core";
-import { invoke } from "@tauri-apps/api/tauri";
+import { invoke } from "@tauri-apps/api/core";
 import { MessageService } from "./service/message.service";
 import { SplitComponent } from "angular-split";
 import { MqType } from "./enums/mq-type";
@@ -45,6 +45,6 @@ export class AppComponent {
 
   @HostListener('document:contextmenu', ['$event'])
   documentClick(event: MouseEvent){    
-    event.preventDefault();
+    //event.preventDefault();
   }
 }

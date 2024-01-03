@@ -1,4 +1,3 @@
-import { message } from '@tauri-apps/api/dialog';
 import { MessageType } from "../enums/message-type";
 
 export class Message {

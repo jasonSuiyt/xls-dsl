@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { MessageType } from 'src/app/enums/message-type';
 import { Message } from 'src/app/modal/message';
-import { appWindow } from "@tauri-apps/api/window";
-import { writeText } from '@tauri-apps/api/clipboard';
-import { message } from '@tauri-apps/api/dialog';
+import { window } from "@tauri-apps/api"
+
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+import { message } from '@tauri-apps/plugin-dialog';
 import { RunLog } from 'src/app/modal/run-log';
 
 
@@ -47,7 +48,7 @@ export class TerminalComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    await appWindow.listen<RunLog>('println', (data) => {
+    await window.getCurrent().listen<RunLog>('println', data => {
       const res = data.payload;
       this.setAMsg(res.msg);
       if(res.logType === "result") {

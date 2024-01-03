@@ -15,9 +15,9 @@ import {FileInfo} from 'src/app/modal/file-info';
 import {DialogComponent} from 'src/app/plugin/dialog/dialog.component';
 import {MonacoEditorComponent} from 'src/app/plugin/monaco-editor/monaco-editor.component';
 import {MessageService} from 'src/app/service/message.service';
-import {open, ask} from '@tauri-apps/api/dialog';
+import {open, ask} from '@tauri-apps/plugin-dialog';
 import {animate, sequence, state, style, transition, trigger} from '@angular/animations';
-import {invoke} from "@tauri-apps/api";
+import {invoke} from "@tauri-apps/api/core";
 
 
 @Component({
@@ -72,11 +72,16 @@ export class XlsEditorComponent implements AfterViewInit, OnInit {
     messageSrv = inject(MessageService)
 
     ngOnInit() {
-        invoke<Array<FileInfo>>("find_all_file").then(res => {
-            console.log(res);
-            
-            this.fileList = res;
-        })
+        try {
+            invoke<Array<FileInfo>>("find_all_file").then(res => {
+                console.log(res);
+
+                this.fileList = res;
+            })
+        }catch (e) {
+            console.log(1111);
+        }
+
     }
 
     ngAfterViewInit(): void {
@@ -185,7 +190,7 @@ export class XlsEditorComponent implements AfterViewInit, OnInit {
         });
         if (selected) {
             this.fileForm.patchValue({
-                xlxTemplate: selected as string
+                xlxTemplate: selected.path
             })
         }
     }
