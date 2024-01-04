@@ -1,5 +1,5 @@
 import {  AfterViewInit, Component, HostListener, ViewChild } from "@angular/core";
-import { invoke } from "@tauri-apps/api/tauri";
+import { invoke } from "@tauri-apps/api";
 import { MessageService } from "./service/message.service";
 import { SplitComponent } from "angular-split";
 import { MqType } from "./enums/mq-type";

@@ -17,12 +17,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DialogComponent } from "./plugin/dialog/dialog.component";
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem } from '@angular/cdk/menu';
-
+import { ScrollingModule } from '@angular/cdk/scrolling'
 import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
   declarations: [AppComponent, MonacoEditorComponent, TerminalComponent, XlsEditorComponent, MenuComponent, CodiconComponent, DialogComponent],
-  imports: [BrowserModule, MonacoEditorModule.forRoot(), FormsModule, InputNoSpaceDirective, FormsModule, AngularSplitModule, BrowserAnimationsModule, FontAwesomeModule, DragDropModule, ReactiveFormsModule, CdkContextMenuTrigger, CdkMenu, CdkMenuItem, OverlayModule],
+  imports: [BrowserModule, MonacoEditorModule.forRoot(), FormsModule, InputNoSpaceDirective, FormsModule, AngularSplitModule, BrowserAnimationsModule, FontAwesomeModule, DragDropModule, ReactiveFormsModule, CdkContextMenuTrigger, CdkMenu, CdkMenuItem, OverlayModule, ScrollingModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   providers: [MessageService],
   bootstrap: [AppComponent],

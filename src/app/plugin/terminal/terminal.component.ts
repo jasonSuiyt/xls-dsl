@@ -1,16 +1,32 @@
-import { ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild, inject } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  OnInit,
+  Output,
+  ViewChild,
+  inject,
+  ChangeDetectionStrategy
+} from '@angular/core';
 import { MessageType } from 'src/app/enums/message-type';
 import { Message } from 'src/app/modal/message';
 import { appWindow } from "@tauri-apps/api/window";
 import { writeText } from '@tauri-apps/api/clipboard';
 import { message } from '@tauri-apps/api/dialog';
 import { RunLog } from 'src/app/modal/run-log';
+import {
+  CdkVirtualScrollableElement,
+  CdkVirtualScrollableWindow,
+  CdkVirtualScrollViewport,
+  VirtualScrollStrategy
+} from "@angular/cdk/scrolling";
 
 
 @Component({
   selector: 'app-terminal',
   templateUrl: './terminal.component.html',
-  styleUrl: './terminal.component.css',
+  styleUrl: './terminal.component.css'
 })
 export class TerminalComponent implements OnInit {
 
@@ -22,28 +38,23 @@ export class TerminalComponent implements OnInit {
 
   @Output()
   runClick: EventEmitter<String> = new EventEmitter();
-  changeDetectorRef = inject(ChangeDetectorRef);
 
   @ViewChild("content") content!: ElementRef;
 
+  @ViewChild("scrollViewport") scrollViewport!: CdkVirtualScrollViewport;
 
-  xtermFocused = false;
-
-  xtermValue: string = '';
 
   message = Array<Message>();
 
-  xtermViewML() {
-    this.xterm.nativeElement.blur();
-    this.xtermFocused = false;
-  }
 
-  public setQMsg(msg: string) {    
-    this.message.push(Message.q(msg));
-  }
-
-  public setAMsg(msg: string) {
-    this.message.push(Message.a(msg));
+  async setAMsg(msg: string) {
+    if(msg.indexOf("\n")){
+      msg.split("\n").map(x=>Message.a(x)).forEach(x=>{
+        this.message.push(x)
+      })
+    }else {
+      this.message.push(Message.a(msg))
+    }
   }
 
   async ngOnInit(): Promise<void> {
@@ -51,18 +62,18 @@ export class TerminalComponent implements OnInit {
       const res = data.payload;
       this.setAMsg(res.msg);
       if(res.logType === "result") {
-          this.running = false;
-          this.xterm.nativeElement.blur();
-          this.xterm.nativeElement.focus();
-          this.xtermFocused = true;
+         this.running = false;
+         this.message = [...this.message];
+         setTimeout(()=>{
+           this.scrollViewport.scrollTo({bottom: 0, behavior: "smooth"});
+         },10);
       }
     });
   }
 
 
   xtermViewClick($event: MouseEvent) {
-    this.xterm.nativeElement.focus();
-    this.xtermFocused = true;
+
   }
 
 
@@ -73,38 +84,11 @@ export class TerminalComponent implements OnInit {
   async play($event: MouseEvent) {
     this.message = []
     this.running = true;
-    this.setQMsg("run");
     this.runClick.emit("run");
   }
 
   async clear($event: MouseEvent) {
     this.message = [];
-    this.setQMsg("clear");
-  }
-
-
-  xtermKeyDown(event: KeyboardEvent) {
-    if (event.key === "Enter") {
-      this.setQMsg(this.xtermValue);
-      switch (this.xtermValue) {
-        case "help":
-          this.setAMsg("run       运行代码");
-          this.setAMsg("clear     清屏")
-          break
-        case "clear":
-          this.message = [];
-          this.setQMsg("clear")
-          break
-        case "run":
-          this.message = [];
-          this.setQMsg("run")
-          this.runClick.emit("run");
-          break
-        default:
-          this.setAMsg('不支持此命令');
-      }
-      this.xtermValue = '';
-    }
   }
 
 
@@ -114,4 +98,8 @@ export class TerminalComponent implements OnInit {
     await message("复制成功");
   }
 
+  scrollViewportChange($event: Event) {
+
+
+  }
 }

@@ -1,6 +1,5 @@
 
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {invoke} from '@tauri-apps/api';
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
 
