@@ -1,4 +1,4 @@
-import { InputNoSpaceDirective } from './input-no-space.directive';
+import {InputNoSpaceDirective} from './input-no-space.directive';
 
 describe('InputNoSpaceDirective', () => {
   it('should create an instance', () => {

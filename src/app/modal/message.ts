@@ -1,4 +1,4 @@
-import { MessageType } from "../enums/message-type";
+import {MessageType} from "../enums/message-type";
 
 export class Message {
 

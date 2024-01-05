@@ -1,10 +1,10 @@
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
-import { invoke } from '@tauri-apps/api';
-import { EditorComponent } from 'ngx-monaco-editor';
-import { MqType } from 'src/app/enums/mq-type';
-import { FileInfo } from 'src/app/modal/file-info';
-import { MessageService } from 'src/app/service/message.service';
-import { debounceTime, fromEvent, throttleTime } from 'rxjs';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {invoke} from '@tauri-apps/api';
+import {EditorComponent} from 'ngx-monaco-editor';
+import {MqType} from 'src/app/enums/mq-type';
+import {FileInfo} from 'src/app/modal/file-info';
+import {MessageService} from 'src/app/service/message.service';
+import {debounceTime, fromEvent, throttleTime} from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

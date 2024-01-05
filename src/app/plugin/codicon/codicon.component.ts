@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, booleanAttribute, numberAttribute } from '@angular/core';
+import {booleanAttribute, Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-codicon',

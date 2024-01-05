@@ -1,7 +1,6 @@
-
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {animate, state, style, transition, trigger} from "@angular/animations";
-import { isPermissionGranted, requestPermission, sendNotification } from '@tauri-apps/api/notification';
+import {isPermissionGranted, requestPermission, sendNotification} from '@tauri-apps/api/notification';
 
 @Component({
     selector: 'app-menu',

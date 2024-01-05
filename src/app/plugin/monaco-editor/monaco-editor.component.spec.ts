@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MonacoEditorComponent } from './monaco-editor.component';
+import {MonacoEditorComponent} from './monaco-editor.component';
 
 describe('MonacoEditorComponent', () => {
   let component: MonacoEditorComponent;

@@ -1,5 +1,5 @@
-import { animate, sequence, state, style, transition, trigger } from '@angular/animations';
-import { AfterViewChecked, AfterViewInit, Component, ElementRef, HostListener, Input, ViewChild } from '@angular/core';
+import {animate, sequence, state, style, transition, trigger} from '@angular/animations';
+import {Component, ElementRef, HostListener, Input, ViewChild} from '@angular/core';
 
 @Component({
   selector: 'app-dialog',

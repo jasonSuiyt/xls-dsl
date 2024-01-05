@@ -1,26 +1,11 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  OnInit,
-  Output,
-  ViewChild,
-  inject,
-  ChangeDetectionStrategy
-} from '@angular/core';
-import { MessageType } from 'src/app/enums/message-type';
-import { Message } from 'src/app/modal/message';
-import { appWindow } from "@tauri-apps/api/window";
-import { writeText } from '@tauri-apps/api/clipboard';
-import { message } from '@tauri-apps/api/dialog';
-import { RunLog } from 'src/app/modal/run-log';
-import {
-  CdkVirtualScrollableElement,
-  CdkVirtualScrollableWindow,
-  CdkVirtualScrollViewport, ScrollingModule,
-  VirtualScrollStrategy
-} from "@angular/cdk/scrolling";
+import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {MessageType} from 'src/app/enums/message-type';
+import {Message} from 'src/app/modal/message';
+import {appWindow} from "@tauri-apps/api/window";
+import {writeText} from '@tauri-apps/api/clipboard';
+import {message} from '@tauri-apps/api/dialog';
+import {RunLog} from 'src/app/modal/run-log';
+import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import {debounceTime, fromEvent, throttleTime} from "rxjs";
 import {MqType} from "../../enums/mq-type";
 import {MessageService} from "../../service/message.service";

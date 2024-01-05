@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { XlsEditorComponent } from './xls-editor.component';
+import {XlsEditorComponent} from './xls-editor.component';
 
 describe('XlsEditorComponent', () => {
   let component: XlsEditorComponent;

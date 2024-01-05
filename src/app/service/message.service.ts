@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { MqMessage } from '../modal/mq-message';
+import {Injectable} from '@angular/core';
+import {Subject} from 'rxjs';
+import {MqMessage} from '../modal/mq-message';
 
 @Injectable({
   providedIn: 'root'

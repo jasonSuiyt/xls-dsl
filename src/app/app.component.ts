@@ -1,8 +1,7 @@
-import {  AfterViewInit, Component, HostListener, ViewChild } from "@angular/core";
-import { invoke } from "@tauri-apps/api";
-import { MessageService } from "./service/message.service";
-import { SplitComponent } from "angular-split";
-import { MqType } from "./enums/mq-type";
+import {Component, HostListener} from "@angular/core";
+import {invoke} from "@tauri-apps/api";
+import {MessageService} from "./service/message.service";
+import {MqType} from "./enums/mq-type";
 
 @Component({
   selector: "app-root",
