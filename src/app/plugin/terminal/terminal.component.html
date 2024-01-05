@@ -21,7 +21,7 @@
             </div>
         </div>
         <div #cccc class="grow overflow-hidden pl-2">
-            <cdk-virtual-scroll-viewport  itemSize="10"    #scrollViewport   [style.height]="cccc.clientHeight+'px'">
+            <cdk-virtual-scroll-viewport  itemSize="20"    #scrollViewport   [style.height]="cccc.clientHeight+'px'">
                 <div class="h-5 text-[12px] pr-1.5" *cdkVirtualFor="let item of message;templateCacheSize: 0">
                     <pre class="text-black dark:text-white" *ngIf="item.type != 'Q'">{{item.message}}</pre>
                 </div>
