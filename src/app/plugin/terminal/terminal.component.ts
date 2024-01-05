@@ -18,15 +18,18 @@ import { RunLog } from 'src/app/modal/run-log';
 import {
   CdkVirtualScrollableElement,
   CdkVirtualScrollableWindow,
-  CdkVirtualScrollViewport,
+  CdkVirtualScrollViewport, ScrollingModule,
   VirtualScrollStrategy
 } from "@angular/cdk/scrolling";
+import {debounceTime, fromEvent, throttleTime} from "rxjs";
+import {MqType} from "../../enums/mq-type";
+import {MessageService} from "../../service/message.service";
 
 
 @Component({
   selector: 'app-terminal',
   templateUrl: './terminal.component.html',
-  styleUrl: './terminal.component.css'
+  styleUrl: './terminal.component.css',
 })
 export class TerminalComponent implements OnInit {
 
@@ -41,11 +44,13 @@ export class TerminalComponent implements OnInit {
 
   @ViewChild("content") content!: ElementRef;
 
-  @ViewChild("scrollViewport") scrollViewport!: CdkVirtualScrollViewport;
+  @ViewChild(CdkVirtualScrollViewport, { static: true }) scrollViewport!: CdkVirtualScrollViewport;
+
+
+  constructor(public messageSrv: MessageService) { }
 
 
   message = Array<Message>();
-
 
   async setAMsg(msg: string) {
     if(msg.indexOf("\n")){
@@ -67,6 +72,20 @@ export class TerminalComponent implements OnInit {
          setTimeout(()=>{
            this.scrollViewport.scrollTo({bottom: 0, behavior: "smooth"});
          },10);
+      }
+    });
+
+    fromEvent(window, "resize").pipe(throttleTime(1000), debounceTime(1000)).subscribe(() => {
+      setTimeout(() => {
+        this.scrollViewport.checkViewportSize();
+      }, 10);
+    })
+
+    this.messageSrv.onMessage(message => {
+      if (message.type === MqType.SPLIT) {
+        setTimeout(() => {
+          this.scrollViewport.checkViewportSize();
+        }, 10);
       }
     });
   }

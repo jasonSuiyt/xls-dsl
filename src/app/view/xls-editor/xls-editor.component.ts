@@ -85,22 +85,22 @@ export class XlsEditorComponent implements AfterViewInit, OnInit {
             switch (x.type) {
                 case MqType.LEFT_FOLD:
                     this.areasEl.first.expand();
-                    this.monacoEditor.fitEidtor();
+                    this.monacoEditor.fitEditor();
                     this.splitPEl.disabled = false;
                     break;
                 case MqType.LEFT_FOLD_OFF:
                     this.areasEl.first.collapse(0, 'left');
-                    this.monacoEditor.fitEidtor();
+                    this.monacoEditor.fitEditor();
                     this.splitPEl.disabled = true;
                     break;
                 case MqType.BOTTOM_FOLD:
                     this.areasEl.last.expand();
-                    this.monacoEditor.fitEidtor();
+                    this.monacoEditor.fitEditor();
                     this.splitEl.disabled = false;
                     break;
                 case MqType.BOTTOM_FOLD_OFF:
                     this.areasEl.last.collapse(0, 'left');
-                    this.monacoEditor.fitEidtor();
+                    this.monacoEditor.fitEditor();
                     this.splitEl.disabled = true;
                     break;
                 default:

@@ -1,8 +1,6 @@
-import { AfterViewChecked, AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
-import { IOutputData, SplitComponent } from 'angular-split';
-import { EditorComponent, NgxEditorModel } from 'ngx-monaco-editor';
-import { MessageType } from 'src/app/enums/message-type';
+import { EditorComponent } from 'ngx-monaco-editor';
 import { MqType } from 'src/app/enums/mq-type';
 import { FileInfo } from 'src/app/modal/file-info';
 import { MessageService } from 'src/app/service/message.service';
@@ -190,19 +188,19 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
     });
     this.messageSrv.onMessage(message => {
       if (message.type === MqType.SPLIT) {
-        this.fitEidtor();
+        this.fitEditor();
       }
     });
 
     fromEvent(window, "resize").pipe(throttleTime(1000), debounceTime(1000)).subscribe(() => {
       console.log(1111);
 
-      this.fitEidtor();
+      this.fitEditor();
     })
   }
 
 
-  public fitEidtor() {
+  public fitEditor() {
     const editor = this.ngxMonacoEditor._editorContainer.nativeElement;
     editor.style.height = this.topView.nativeElement.clientHeight + 'px';
     this.editor.layout();
