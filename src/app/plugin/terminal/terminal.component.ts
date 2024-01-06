@@ -35,15 +35,15 @@ export class TerminalComponent implements OnInit {
   constructor(public messageSrv: MessageService) { }
 
 
-  message = Array<Message>();
+  message:String[] = [];
 
   async setAMsg(msg: string) {
     if(msg.indexOf("\n")){
-      msg.split("\n").map(x=>Message.a(x)).forEach(x=>{
+      msg.split("\n").forEach(x=>{
         this.message.push(x)
       })
     }else {
-      this.message.push(Message.a(msg))
+      this.message.push(msg)
     }
   }
 
@@ -97,7 +97,7 @@ export class TerminalComponent implements OnInit {
 
 
   async copyClick($event: MouseEvent) {
-    const copyText = this.message.filter(x=>x.type === MessageType.A).map(x=>x.message).join("\n");
+    const copyText = this.message.join("\n");
     await writeText(copyText);
     await message("复制成功");
   }
