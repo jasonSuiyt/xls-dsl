@@ -38,13 +38,9 @@ export class TerminalComponent implements OnInit {
   message:String[] = [];
 
   async setAMsg(msg: string) {
-    if(msg.indexOf("\n")){
-      msg.split("\n").forEach(x=>{
-        this.message.push(x)
-      })
-    }else {
-      this.message.push(msg)
-    }
+    msg.split(/[\n\r]/).forEach(x=>{
+      this.message.push(x);
+    })
   }
 
   async ngOnInit(): Promise<void> {
