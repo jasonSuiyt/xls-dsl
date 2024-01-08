@@ -1,6 +1,7 @@
 use lazy_static::lazy_static;
 use std::sync::{Mutex, Once};
 use std::collections::HashMap;
+use std::error::Error;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
@@ -183,8 +184,17 @@ impl V8Runtime {
                 let file = arg.to_rust_string_lossy(scope);
                 let path = Path::new(&file);
                 let dir = path.parent().unwrap();
-                fs::create_dir_all(dir).unwrap();
-                File::create(file).unwrap();
+
+                match  fs::create_dir_all(dir){
+                    Ok(_) => {
+                        File::create(file).unwrap();
+                    }
+                    Err(e) => {
+                        let msg = v8::String::new(scope, &e.to_string()).unwrap();
+                        let exception = v8::Exception::type_error(scope, msg.into());
+                        scope.throw_exception(exception);
+                    }
+                }
             }
         };
         let append_str_callback = |scope: &mut HandleScope, args: FunctionCallbackArguments, mut res: ReturnValue| {
@@ -194,8 +204,17 @@ impl V8Runtime {
                 let arg2 = args.get(1);
                 let path = arg1.to_rust_string_lossy(scope);
                 let str = arg2.to_rust_string_lossy(scope);
-                let mut file = fs::OpenOptions::new().append(true).open(path).unwrap();
-                file.write_all(str.as_bytes()).unwrap();
+                match fs::OpenOptions::new().append(true).open(path) {
+                    Ok(mut file) => {
+                        file.write_all(str.as_bytes()).unwrap();
+                    }
+                    Err(e) => {
+                        let msg = v8::String::new(scope, &e.to_string()).unwrap();
+                        let exception = v8::Exception::type_error(scope, msg.into());
+                        scope.throw_exception(exception);
+                    }
+                }
+
             }
         };
 

@@ -49,7 +49,7 @@ export class TerminalComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await appWindow.listen<RunLog>('println', (data) => {
       const res = data.payload;
-
+      this.setAMsg(res.msg);
       if(res.logType === "result") {
          this.running = false;
          //this.logSubject.next(uuidv4().toString())
@@ -58,7 +58,7 @@ export class TerminalComponent implements OnInit {
            this.scrollViewport.scrollTo({bottom: 0, behavior: "smooth"});
          },10);
       }else {
-        this.setAMsg(res.msg);
+        //this.setAMsg(res.msg);
       }
     });
 
