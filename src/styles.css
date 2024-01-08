@@ -7,3 +7,27 @@ html,body{
   margin: 0;
   padding: 0;
 }
+
+
+
+@media(prefers-color-scheme: light) {
+  ::-webkit-scrollbar,section ::-webkit-scrollbar{
+    width: 8px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb{
+    background:  rgb(139,139,138);
+  }
+}
+
+@media(prefers-color-scheme: dark) {
+  ::-webkit-scrollbar,section ::-webkit-scrollbar{
+    width: 8px;
+    height: 5px;
+  }
+  ::-webkit-scrollbar-thumb{
+    background:  rgb(71,71,71);
+  }
+}
+

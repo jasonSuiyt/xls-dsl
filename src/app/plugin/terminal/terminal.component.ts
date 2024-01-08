@@ -1,15 +1,13 @@
-import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
-import {MessageType} from 'src/app/enums/message-type';
-import {Message} from 'src/app/modal/message';
+import {ChangeDetectorRef, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {appWindow} from "@tauri-apps/api/window";
 import {writeText} from '@tauri-apps/api/clipboard';
 import {message} from '@tauri-apps/api/dialog';
 import {RunLog} from 'src/app/modal/run-log';
 import {CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
-import {debounceTime, fromEvent, throttleTime} from "rxjs";
+import {debounceTime, fromEvent, Subject, throttleTime} from "rxjs";
 import {MqType} from "../../enums/mq-type";
 import {MessageService} from "../../service/message.service";
-
+import  {v4 as uuidv4} from "uuid"
 
 @Component({
   selector: 'app-terminal',
@@ -24,6 +22,7 @@ export class TerminalComponent implements OnInit {
 
   @ViewChild("xtermView") xtermView!: ElementRef;
 
+
   @Output()
   runClick: EventEmitter<String> = new EventEmitter();
 
@@ -31,8 +30,10 @@ export class TerminalComponent implements OnInit {
 
   @ViewChild(CdkVirtualScrollViewport, { static: true }) scrollViewport!: CdkVirtualScrollViewport;
 
+  logSubject = new Subject<string>();
 
-  constructor(public messageSrv: MessageService) { }
+
+  constructor(public messageSrv: MessageService, public changeDetectorRef:ChangeDetectorRef) { }
 
 
   message:String[] = [];
@@ -40,19 +41,24 @@ export class TerminalComponent implements OnInit {
   async setAMsg(msg: string) {
     msg.split(/[\n\r]/).forEach(x=>{
       this.message.push(x);
-    })
+    });
+    //this.logSubject.next(uuidv4().toString())
   }
+
 
   async ngOnInit(): Promise<void> {
     await appWindow.listen<RunLog>('println', (data) => {
       const res = data.payload;
-      this.setAMsg(res.msg);
+
       if(res.logType === "result") {
          this.running = false;
+         //this.logSubject.next(uuidv4().toString())
          this.message = [...this.message];
          setTimeout(()=>{
            this.scrollViewport.scrollTo({bottom: 0, behavior: "smooth"});
          },10);
+      }else {
+        this.setAMsg(res.msg);
       }
     });
 
@@ -69,11 +75,15 @@ export class TerminalComponent implements OnInit {
         }, 10);
       }
     });
+    // this.logSubject.subscribe(x=>{
+    //   this.message = [...this.message];
+    //   setTimeout(()=>{
+    //     this.scrollViewport.scrollTo({bottom: 0, behavior: "smooth"});
+    //   },10);
+    // })
   }
 
-
   xtermViewClick($event: MouseEvent) {
-
   }
 
 
@@ -82,7 +92,7 @@ export class TerminalComponent implements OnInit {
   }
 
   async play($event: MouseEvent) {
-    this.message = []
+    await this.clear($event);
     this.running = true;
     this.runClick.emit("run");
   }

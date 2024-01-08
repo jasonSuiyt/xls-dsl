@@ -20,9 +20,9 @@
 
             </div>
         </div>
-        <div #cccc class="grow overflow-hidden pl-2">
-            <cdk-virtual-scroll-viewport  itemSize="20"  [style.height]="cccc.clientHeight+'px'">
-                <div class="h-5 text-[12px] pr-1.5" *cdkVirtualFor="let item of message;templateCacheSize: 0">
+        <div #logViewP class="grow overflow-hidden pl-2 relative">
+            <cdk-virtual-scroll-viewport   itemSize="20"  [style.height]="logViewP.clientHeight+'px'">
+                <div class="h-5 text-[12px] pr-1.5" *cdkVirtualFor="let item of message;">
                     <pre class="text-black dark:text-white">{{item}}</pre>
                 </div>
             </cdk-virtual-scroll-viewport>
