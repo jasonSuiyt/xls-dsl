@@ -74,7 +74,7 @@ impl V8Runtime {
             let message_str = message.get(scope);
             let line = message.get_line_number(scope).unwrap();
             if let Some(w) = APP.lock().unwrap().get("window") {
-                w.emit("println", RunLog::result(format!("line:{}\n{}", line, message_str.to_rust_string_lossy(scope)).to_string())).unwrap();
+                w.emit("println", RunLog::result(format!("line:{} err:{}", line, message_str.to_rust_string_lossy(scope)).to_string())).unwrap();
             }
         }
         scope.add_message_listener(check_message_0);
