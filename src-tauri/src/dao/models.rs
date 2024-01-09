@@ -45,6 +45,10 @@ impl RunLog {
         RunLog { log_type: "result".to_string(), msg }
     }
 
+    pub fn error(msg: String) -> Self{
+        RunLog { log_type: "error".to_string(), msg }
+    }
+
     pub fn log(msg: String) -> Self{
         RunLog { log_type: "log".to_string(), msg }
     }

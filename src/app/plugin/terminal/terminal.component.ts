@@ -16,7 +16,7 @@ import  {v4 as uuidv4} from "uuid"
 })
 export class TerminalComponent implements OnInit {
 
-  running: boolean = false;
+  public running: boolean = false;
 
   @ViewChild("xterm") xterm!: ElementRef;
 
@@ -36,11 +36,14 @@ export class TerminalComponent implements OnInit {
   constructor(public messageSrv: MessageService, public changeDetectorRef:ChangeDetectorRef) { }
 
 
-  message:String[] = [];
+  message = Array<RunLog>();
 
-  async setAMsg(msg: string) {
-    msg.split(/[\n\r]/).forEach(x=>{
-      this.message.push(x);
+  async setAMsg(msg: RunLog) {
+    msg.msg.split(/[\n\r]/).forEach(x=>{
+      this.message.push({
+        logType: msg.logType,
+        msg:x
+      });
     });
     //this.logSubject.next(uuidv4().toString())
   }
@@ -49,16 +52,17 @@ export class TerminalComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     await appWindow.listen<RunLog>('println', (data) => {
       const res = data.payload;
-      this.setAMsg(res.msg);
-      if(res.logType === "result") {
+      if(res.logType !== "result"){
+        this.setAMsg(res);
+      }
+      if(res.logType === "result" || res.logType === "error") {
          this.running = false;
-         //this.logSubject.next(uuidv4().toString())
+         this.logSubject.next(uuidv4().toString())
          this.message = [...this.message];
+         this.changeDetectorRef.detectChanges();
          setTimeout(()=>{
            this.scrollViewport.scrollTo({bottom: 0, behavior: "smooth"});
          },10);
-      }else {
-        //this.setAMsg(res.msg);
       }
     });
 

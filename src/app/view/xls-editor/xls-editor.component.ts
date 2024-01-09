@@ -19,6 +19,7 @@ import {MessageService} from 'src/app/service/message.service';
 import {ask, open} from '@tauri-apps/api/dialog';
 import {animate, sequence, state, style, transition, trigger} from '@angular/animations';
 import {invoke} from "@tauri-apps/api";
+import {TerminalComponent} from "../../plugin/terminal/terminal.component";
 
 
 @Component({
@@ -57,6 +58,7 @@ export class XlsEditorComponent implements AfterViewInit, OnInit {
     @ViewChild("fileContentMenu") fileContentMenu!: ElementRef;
 
     @ViewChildren("fileItem") fileItem!: QueryList<ElementRef>
+    @ViewChildren("fileItem") terminalComponent!: TerminalComponent
 
     menuShow: boolean = false;
 
@@ -222,7 +224,11 @@ export class XlsEditorComponent implements AfterViewInit, OnInit {
     }
 
     async runClick($event: String) {
-       invoke('run', {id: this.fileList.filter(x=>x.selected)[0].id}).then(data=>{
+       let fileInfo = this.fileList.find(x=>x.selected);
+       if(!fileInfo){
+           return
+       }
+       invoke('run', {id: fileInfo.id}).then(data=>{
             console.log(data);
        });  
     }

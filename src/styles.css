@@ -12,22 +12,34 @@ html,body{
 
 @media(prefers-color-scheme: light) {
   ::-webkit-scrollbar,section ::-webkit-scrollbar{
-    width: 8px;
+    width: 10px;
     height: 5px;
   }
 
   ::-webkit-scrollbar-thumb{
     background:  rgb(139,139,138);
   }
+
+  ::-webkit-scrollbar-track{
+    border-width: 1px;
+    border-color: rgb(220,220,220);
+    border-left-style: solid;
+  }
 }
 
 @media(prefers-color-scheme: dark) {
   ::-webkit-scrollbar,section ::-webkit-scrollbar{
-    width: 8px;
+    width: 10px;
     height: 5px;
   }
   ::-webkit-scrollbar-thumb{
     background:  rgb(71,71,71);
+  }
+
+  ::-webkit-scrollbar-track{
+      border-width: 1px;
+      border-color: rgb(43,43,43);
+      border-left-style: solid;
   }
 }
 
