@@ -63,8 +63,6 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
   onInit(editor: any) {
     this.editor = editor;
     const monaco = (window as any).monaco;
-    const $this = this;
- 
     monaco.languages.registerCompletionItemProvider('javascript', {
       triggerCharacters: ['.'],
       provideCompletionItems: function (model: any, position: any, context: any, token: any) {
@@ -73,7 +71,6 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
         const content = model.getLineContent(line).trim();
         let word = model.getWordUntilPosition(position);
         let preStr = content.substring(0,word.startColumn-1);
-        console.log(preStr)
         if(preStr.endsWith(".")){
           if(preStr.endsWith("fs.")){
             const completionItemList = [
@@ -155,12 +152,7 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
             sortText: "1",
           }
         ];
-
-        const suggestions = completionItemList.filter((x: any) => {
-          const flag = x.label.concat(word);
-          return flag;
-        });
-
+        const suggestions = completionItemList.filter((x: any) =>  x.label.concat(word));
         return {
           suggestions: [...suggestions]
         }
@@ -215,7 +207,7 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
 
   codeChange(value: string) {
     const params = { id: this.select_id, code: value };
-    invoke<FileInfo>('update_code_by_id', { ...params }).then(file => { })
+    invoke<FileInfo>('update_code_by_id', { ...params }).then(_ => { })
   }
 
 
