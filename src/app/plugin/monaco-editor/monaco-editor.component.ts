@@ -71,11 +71,11 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
 
         const line = position.lineNumber
         const content = model.getLineContent(line).trim();
-        console.log(content)
-        if(content.endsWith(".")){
-          let pre = content.split(".")[0];
-          console.log(pre)
-          if(pre === "fs"){
+        let word = model.getWordUntilPosition(position);
+        let preStr = content.substring(0,word.startColumn-1);
+        console.log(preStr)
+        if(preStr.endsWith(".")){
+          if(preStr.endsWith("fs.")){
             const completionItemList = [
               {
                 label: "create",
@@ -92,7 +92,15 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
                 kind: monaco.languages.CompletionItemKind.Function,
                 detail: "对文件进行文本追加",
                 sortText: "1"
-              }
+              },
+              {
+                label: "read_xls",
+                insertText: "read_xls(${1:fileName})",
+                insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                kind: monaco.languages.CompletionItemKind.Function,
+                detail: "获取xls数据方法",
+                sortText: "3"
+              },
             ];
 
             return {
@@ -117,13 +125,6 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
             sortText: "1"
           },
           {
-            label: "read_xls",
-            insertText: "read_xls()",
-            kind:  monaco.languages.CompletionItemKind.Function,
-            detail: "获取xls数据方法",
-            sortText: "1"
-          },
-          {
             label: "md5",
             insertText: "md5(${1:})",
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
@@ -141,7 +142,7 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
           },
           {
             label: "fori",
-            insertText: 'for(let i=0;i<${1:}.length;i++){\n${2:}\n}',
+            insertText: 'for(let i=0;i<${1:};i++){\n${2:}\n}',
             insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
             detail: "fori",
             sortText: "1",
@@ -155,8 +156,6 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
           }
         ];
 
-        const word = model.getWordUntilPosition(position);
-        console.log(word)
         const suggestions = completionItemList.filter((x: any) => {
           const flag = x.label.concat(word);
           return flag;

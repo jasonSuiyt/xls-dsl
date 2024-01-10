@@ -56,7 +56,6 @@ impl V8Runtime {
 
         V8Runtime::add_md5_fun(scope, object_template);
         V8Runtime::add_snow_id_fun(scope, object_template);
-        V8Runtime::set_read_xls_fun(scope, object_template);
         V8Runtime::add_println_fun(scope, object_template);
         V8Runtime::add_uuid_fun(scope, object_template);
 
@@ -134,22 +133,7 @@ impl V8Runtime {
         object_template.set(name.into(), function.into());
     }
 
-    fn set_read_xls_fun(scope: &mut HandleScope<()>, object_template: Local<ObjectTemplate>) {
-        let read_xls_callback = |scope: &mut HandleScope, _: FunctionCallbackArguments, mut res: ReturnValue| {
-            let binding = PATH.lock().unwrap();
-            let path = binding.get("path").unwrap();
-            let mut parse_xls = ParseXls {
-                xls_path: path.to_string()
-            };
-            let mut value2 = parse_xls.read_all().unwrap();
-            let result1 = value2.to_v8(scope).unwrap();
-            res.set(result1);
-        };
 
-        let name = v8::String::new(scope, "read_xls").unwrap();
-        let md5_function = FunctionTemplate::new(scope, read_xls_callback);
-        object_template.set(name.into(), md5_function.into());
-    }
 
     fn add_snow_id_fun(scope: &mut HandleScope<()>, object_template: Local<ObjectTemplate>) {
         let snow_id_callback = |scope: &mut HandleScope, _: FunctionCallbackArguments, mut res: ReturnValue| {
@@ -218,9 +202,41 @@ impl V8Runtime {
             }
         };
 
+        let read_xls_callback = |scope: &mut HandleScope, args: FunctionCallbackArguments, mut res: ReturnValue| {
+            // 如果传入路径则读取对应的路径
+            let mut path ;
+            if args.length() == 1{
+                let arg1 = args.get(0).to_rust_string_lossy(scope);
+                let file = Path::new(&arg1);
+                if !file.is_file() || !file.exists(){
+                    let msg = v8::String::new(scope, &format!("The file [{}] not exists", arg1)).unwrap();
+                    let exception = v8::Exception::type_error(scope, msg.into());
+                    scope.throw_exception(exception);
+                    return;
+                }
+                if file.extension().unwrap().to_ascii_uppercase() != "XLSX"{
+                    let msg = v8::String::new(scope, &format!("The file [{}] format is incorrect. Support xlsx format.", arg1)).unwrap();
+                    let exception = v8::Exception::type_error(scope, msg.into());
+                    scope.throw_exception(exception);
+                    return;
+                }
+                path = arg1;
+            }else {
+                let binding = PATH.lock().unwrap();
+                path = binding.get("path").unwrap().clone();
+            }
+            let mut parse_xls = ParseXls {
+                xls_path: path.to_string()
+            };
+            let mut value2 = parse_xls.read_all().unwrap();
+            let result1 = value2.to_v8(scope).unwrap();
+            res.set(result1);
+        };
+
         let file = ObjectTemplate::new(scope);
         file.set( v8::String::new(scope, "append").unwrap().into(), FunctionTemplate::new(scope, append_str_callback).into());
         file.set( v8::String::new(scope, "create").unwrap().into(), FunctionTemplate::new(scope, create_file_callback).into());
+        file.set( v8::String::new(scope, "read_xls").unwrap().into(), FunctionTemplate::new(scope, read_xls_callback).into());
 
         let file_name = v8::String::new(scope, "fs").unwrap();
         object_template.set(file_name.into(), file.into());
