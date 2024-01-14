@@ -87,6 +87,7 @@ jobs:
         if: matrix.platform == 'windows-latest'
         run: |
           pwd
+          npm i -g tauri
           Get-ChildItem -Path 'C:\npm' -Recurse -Filter pnpm
           Get-ChildItem -Path 'C:\npm' -Recurse -Filter tauri
           Get-ChildItem -Path '.' -Recurse -Filter tauri
