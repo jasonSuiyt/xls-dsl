@@ -41,7 +41,7 @@ jobs:
       - name: install PNPM
         run: |
           npm i -g pnpm
-          npm i
+          npm i --force
 
       - name: Sync node version and setup cache
         uses: actions/setup-node@v4
