@@ -49,9 +49,7 @@ jobs:
           
       - name: Install frontend dependencies
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
-        run: |
-          $Env:path= "$Env:path;D:\a\xls-dsl\xls-dsl\node_modules\.bin"
-          pnpm install # Change this to npm, yarn or pnpm.
+        run: pnpm install # Change this to npm, yarn or pnpm.
 
       - name: Build the app
         if: matrix.platform == 'ubuntu-20.04'
