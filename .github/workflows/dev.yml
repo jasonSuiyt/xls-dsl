@@ -89,10 +89,10 @@ jobs:
         if: matrix.platform == 'windows-latest'
         run: |
           pwd
-          Get-ChildItem -Path './' -Recurse -Filter pnpm
+          Get-ChildItem -Path './' -Recurse -Filter tauri
           $Env:path= "$Env:path;D:\a\xls-dsl\xls-dsl\node_modules\.bin"
           $Env:path
-          pnpm tauri build --target x86_64-pc-windows-msvc
+          npm run tauri
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
