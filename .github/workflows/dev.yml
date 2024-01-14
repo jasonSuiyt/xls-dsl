@@ -90,7 +90,7 @@ jobs:
           gcm tauri
           pnpm tauri build --target x86_64-pc-windows-msvc
         env:
-          PATH: ${PATH};D:\a\xls-dsl\xls-dsl\node_modules\.bin;D:\a\xls-dsl\xls-dsl\node_modules\.pnpm
+          path: ${path};D:\a\xls-dsl\xls-dsl\node_modules\.bin;D:\a\xls-dsl\xls-dsl\node_modules\.pnpm
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
