@@ -41,7 +41,7 @@ jobs:
       - name: install PNPM
         run: |
           npm i -g pnpm
-          npm i --force
+          npm i -g tauri --force
 
       - name: Sync node version and setup cache
         uses: actions/setup-node@v4
@@ -89,10 +89,13 @@ jobs:
         if: matrix.platform == 'windows-latest'
         run: |
           pwd
+          Get-ChildItem -Path 'C:' -Recurse -Filter pnpm
+          Get-ChildItem -Path 'C:' -Recurse -Filter tauri
           $Env:path= "$Env:path;D:\a\xls-dsl\xls-dsl\node_modules\.bin"
           $Env:path
           npm i --force
-          Get-ChildItem -Path './' -Recurse -Filter tauri
+          Get-ChildItem -Path 'D:' -Recurse -Filter pnpm
+          Get-ChildItem -Path 'D:' -Recurse -Filter tauri
           npm run tauri
       - uses: tauri-apps/tauri-action@v0
         env:
