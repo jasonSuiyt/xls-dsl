@@ -84,8 +84,8 @@ jobs:
          
       - name: Build the app
         if: matrix.platform == 'windows-latest'
-        run: 
-          npm i
+        run: |
+          npm i -g tauri
           pnpm tauri build --target x86_64-pc-windows-msvc
       - uses: tauri-apps/tauri-action@v0
         env:
