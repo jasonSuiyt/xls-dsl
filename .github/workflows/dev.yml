@@ -84,8 +84,9 @@ jobs:
       - name: Build the app
         if: matrix.platform == 'windows-latest'
         run: |
-          tree
           pwd
+          set PATH=%PATH%;D:\a\xls-dsl\xls-dsl\node_modules\.bin
+          path
           pnpm tauri build --target x86_64-pc-windows-msvc
       - uses: tauri-apps/tauri-action@v0
         env:
