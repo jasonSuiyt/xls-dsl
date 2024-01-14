@@ -39,16 +39,13 @@ jobs:
           workspaces: './src-tauri -> target'
 
       - name: install PNPM
-        run: |
-          npm i -g pnpm
-          npm i -g tauri --force
+        run: npm i -g pnpm
 
       - name: Sync node version and setup cache
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          cache: 'pnpm,tauri' # Set this to npm, yarn or pnpm.
-            
+          cache: 'pnpm' # Set this to npm, yarn or pnpm.
           
       - name: Install frontend dependencies
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
@@ -86,12 +83,16 @@ jobs:
           Invoke-WebRequest -UseBasicParsing https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip -OutFile "${Env:TEMP}\wpd.zip"
           Expand-Archive -LiteralPath "${Env:TEMP}\wpd.zip" -DestinationPath "${Env:TEMP}\wpd"
           Move-Item -LiteralPath "${Env:TEMP}\wpd\WpdPack\Lib\x64" -Destination C:\Users\runneradmin\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\\rustlib\x86_64-pc-windows-msvc\lib\  
+      - name: Install npm i
+        if: matrix.platform == 'windows-latest'
+        run: npm i --force 
       - name: Build the app
         if: matrix.platform == 'windows-latest'
         run: |
           pwd
           Get-ChildItem -Path 'C:\npm' -Recurse -Filter pnpm
           Get-ChildItem -Path 'C:\npm' -Recurse -Filter tauri
+          Get-ChildItem -Path './' -Recurse -Filter tauri
           $Env:path= "$Env:path;D:\a\xls-dsl\xls-dsl\node_modules\.bin"
           $Env:path
           npm i --force
