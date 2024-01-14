@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest] # [macos-latest, ubuntu-20.04, windows-latest]
+        platform: [macos-latest, ubuntu-20.04, windows-latest]
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -75,7 +75,7 @@ jobs:
           releaseDraft: true
           prerelease: false  
       - name: Install sqlite-bundled
-        if: matrix.platform == 'windows-latest1'
+        if: matrix.platform == 'windows-latest'
         run: |
           cargo install diesel_cli --no-default-features --features "sqlite-bundled"
           Invoke-WebRequest -UseBasicParsing https://www.winpcap.org/install/bin/WpdPack_4_1_2.zip -OutFile "${Env:TEMP}\wpd.zip"
