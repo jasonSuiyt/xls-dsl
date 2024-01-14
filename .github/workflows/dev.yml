@@ -86,11 +86,10 @@ jobs:
         run: |
           npm i -g tauri
           Get-ChildItem -Path 'C:\npm' -Recurse -Filter tauri.cmd
-          $Env:path="$Env:path;C:\npm\prefix\node_modules\tauri"
           $Env:path
           npm run tauri
         env:
-          PATH: ${PATH};C:\npm\prefix\node_modules
+          PATH: C:\npm\prefix\node_modules
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
