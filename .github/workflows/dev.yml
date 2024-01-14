@@ -41,7 +41,7 @@ jobs:
       - name: install PNPM
         run: |
           npm i -g pnpm
-          npm i -g tauri
+          npm i
 
       - name: Sync node version and setup cache
         uses: actions/setup-node@v4
@@ -87,9 +87,9 @@ jobs:
           Move-Item -LiteralPath "${Env:TEMP}\wpd\WpdPack\Lib\x64" -Destination C:\Users\runneradmin\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\\rustlib\x86_64-pc-windows-msvc\lib\  
       - name: Build the app
         if: matrix.platform == 'windows-latest'
-        run: |
+        run: &&
           pwd
-          Get-ChildItem -Path './' -Recurse -Filter tauri
+          Get-ChildItem -Path './' -Recurse -Filter pnpm
           $Env:path= "$Env:path;D:\a\xls-dsl\xls-dsl\node_modules\.bin"
           $Env:path
           pnpm tauri build --target x86_64-pc-windows-msvc
