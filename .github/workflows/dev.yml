@@ -88,10 +88,10 @@ jobs:
         run: |
           pwd
           npm i -g tauri
-          Get-ChildItem -Path 'C:\npm' -Recurse -Filter pnpm
           Get-ChildItem -Path 'C:\npm' -Recurse -Filter tauri
-          Get-ChildItem -Path '.' -Recurse -Filter tauri
-          $Env:path= "$Env:path;C:\npm\prefix\node_modules"
+          tree C:\npm\prefix\node_modules
+          Get-ChildItem -Path 'C:\npm\prefix\node_modules\tauri' -Recurse -Filter tauri
+          $Env:path= "$Env:path;C:\npm\prefix\node_modules\tauri"
           $Env:path
           npm run tauri
       - uses: tauri-apps/tauri-action@v0
