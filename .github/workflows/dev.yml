@@ -47,7 +47,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-          cache: 'pnpm' # Set this to npm, yarn or pnpm.
+          cache: |
+            'pnpm' # Set this to npm, yarn or pnpm.
+            'tauri'
           
       - name: Install frontend dependencies
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
@@ -89,13 +91,11 @@ jobs:
         if: matrix.platform == 'windows-latest'
         run: |
           pwd
-          Get-ChildItem -Path 'C:' -Recurse -Filter pnpm
-          Get-ChildItem -Path 'C:' -Recurse -Filter tauri
+          Get-ChildItem -Path 'C:\npm' -Recurse -Filter pnpm
+          Get-ChildItem -Path 'C:\npm' -Recurse -Filter tauri
           $Env:path= "$Env:path;D:\a\xls-dsl\xls-dsl\node_modules\.bin"
           $Env:path
           npm i --force
-          Get-ChildItem -Path 'D:' -Recurse -Filter pnpm
-          Get-ChildItem -Path 'D:' -Recurse -Filter tauri
           npm run tauri
       - uses: tauri-apps/tauri-action@v0
         env:
