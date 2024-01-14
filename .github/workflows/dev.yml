@@ -84,11 +84,12 @@ jobs:
          
       - name: Build the app
         if: matrix.platform == 'windows-latest'
-        run: pnpm tauri build --target x86_64-pc-windows-msvc
+        run: 
+          npm i
+          pnpm tauri build --target x86_64-pc-windows-msvc
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PATH: ${PATH};D:\a\xls-dsl\xls-dsl\node_modules\.bin
         with:
           tagName: ${{ github.ref_name }} # This only works if your workflow triggers on new tags.
           releaseName: 'App Name v__VERSION__' # tauri-action replaces \_\_VERSION\_\_ with the app version.
