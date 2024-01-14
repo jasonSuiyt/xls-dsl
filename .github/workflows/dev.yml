@@ -91,7 +91,7 @@ jobs:
           Get-ChildItem -Path 'C:\npm' -Recurse -Filter pnpm
           Get-ChildItem -Path 'C:\npm' -Recurse -Filter tauri
           Get-ChildItem -Path '.' -Recurse -Filter tauri
-          $Env:path= "$Env:path;D:\a\xls-dsl\xls-dsl\node_modules\.bin;D:\a\xls-dsl\xls-dsl\node_modules\.pnpm"
+          $Env:path= "$Env:path;C:\npm\prefix\node_modules"
           $Env:path
           npm run tauri
       - uses: tauri-apps/tauri-action@v0
