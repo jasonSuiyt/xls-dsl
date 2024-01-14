@@ -86,7 +86,7 @@ jobs:
       - name: install npm i
         if: matrix.platform == 'windows-latest'
         run: |
-          npm cache verify
+          npm cache clean --force
           npm i --force
           Get-ChildItem -Path './' -Recurse -Filter tauri
       - name: Build the app
