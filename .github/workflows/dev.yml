@@ -83,7 +83,7 @@ jobs:
           Move-Item -LiteralPath "${Env:TEMP}\wpd\WpdPack\Lib\x64" -Destination C:\Users\runneradmin\.rustup\toolchains\stable-x86_64-pc-windows-msvc\lib\\rustlib\x86_64-pc-windows-msvc\lib\  
       - name: Install tauri
         if: matrix.platform == 'windows-latest'
-        run: npm -i -g tauri
+        run: npm i
       - name: Build the app
         if: matrix.platform == 'windows-latest'
         run: pnpm tauri build --target x86_64-pc-windows-msvc
