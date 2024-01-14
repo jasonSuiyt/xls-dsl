@@ -85,9 +85,7 @@ jobs:
         if: matrix.platform == 'windows-latest'
         run: |
           npm i -g tauri
-          Get-ChildItem -Path 'C:\npm' -Recurse -Filter tauri.cmd
-          $Env:path
-          npm run tauri
+          pnpm tauri build --target x86_64-pc-windows-msvc
         env:
           PATH: C:\npm\prefix\node_modules
       - uses: tauri-apps/tauri-action@v0
