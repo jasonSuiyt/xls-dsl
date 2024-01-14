@@ -85,7 +85,8 @@ jobs:
         if: matrix.platform == 'windows-latest'
         run: |
           $Env:path
-          Get-ChildItem -Path ./ -Recurse -Filter tauri.ps1
+          npm i -g tauri
+          Get-ChildItem -Path C:\npm -Recurse -Filter tauri.ps1
           gcm pnpm
           gcm tauri
           pnpm tauri build --target x86_64-pc-windows-msvc
