@@ -86,7 +86,6 @@ jobs:
         run: |
           $Env:path
           npm i -g tauri
-          tree C:\npm\prefix\node_modules\tauri\bin
           Get-ChildItem -Path C:\npm\prefix\node_modules -Recurse -Filter tauri.ps1
           gcm pnpm
           gcm tauri
