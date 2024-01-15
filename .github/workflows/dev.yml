@@ -84,14 +84,13 @@ jobs:
       - name: Build the app
         if: matrix.platform == 'windows-latest'
         run: |
-          $Env:path
           npm i -g tauri
           Get-ChildItem -Path C:\npm\prefix\node_modules -Recurse -Filter tauri.ps1
+          $Env:path="$Env:path;C:\npm\prefix\node_modules\tauri\bin"
           gcm pnpm
+          $Env:path
           gcm tauri
           pnpm tauri build --target x86_64-pc-windows-msvc
-        env:
-          PATH: C:\npm;C:\npm\prefix;D:\a\xls-dsl\xls-dsl\node_modules\.bin;D:\a\xls-dsl\xls-dsl\node_modules\.pnpm;C:\npm\prefix\node_modules\tauri\bin
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
