@@ -92,6 +92,9 @@ jobs:
           gcm tauri
           tauri
           npm run tauri
+        env:
+          RUSTUP_DIST_SERVER: https://mirrors.ustc.edu.cn/rust-static
+          RUSTUP_UPDATE_ROOT: https://mirrors.ustc.edu.cn/rust-static/rustup
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
