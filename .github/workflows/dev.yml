@@ -90,7 +90,7 @@ jobs:
           gcm pnpm
           $Env:path
           gcm tauri
-          pnpm tauri build --target x86_64-pc-windows-msvc
+          npm run tauri
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
