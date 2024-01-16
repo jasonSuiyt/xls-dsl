@@ -49,7 +49,7 @@ jobs:
           
       - name: Install frontend dependencies
         # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
-        run: pnpm install # Change this to npm, yarn or pnpm.
+        run: npm install --force # Change this to npm, yarn or pnpm.
 
       - name: Build the app
         if: matrix.platform == 'ubuntu-20.04'
@@ -84,10 +84,9 @@ jobs:
       - name: Build the app
         if: matrix.platform == 'windows-latest'
         run: |
-          npm i -g tauri
           Get-ChildItem -Path C:\npm\prefix\node_modules -Recurse -Filter tauri.ps1
-          $Env:path="$Env:path;C:\npm\prefix\node_modules\tauri\bin"
-          gcm pnpm
+          Get-ChildItem -Path D:\a\xls-dsl\xls-dsl\node_modules -Recurse -Filter tauri.ps1
+          $Env:path="$Env:path;D:\a\xls-dsl\xls-dsl\node_modules\.bin;C:\npm\prefix\node_modules\tauri\bin"
           $Env:path
           gcm tauri
           npm run tauri
