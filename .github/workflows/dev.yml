@@ -84,7 +84,7 @@ jobs:
       - name: Build the app
         if: matrix.platform == 'windows-latest'
         run: |
-          npm i tauri --focre
+          npm i --legacy-peer-deps tauri
           Get-ChildItem -Path C:\npm\prefix\node_modules -Recurse -Filter tauri.ps1
           Get-ChildItem -Path D:\a\xls-dsl\xls-dsl\node_modules -Recurse -Filter tauri.ps1
           $Env:path="$Env:path;D:\a\xls-dsl\xls-dsl\node_modules\.bin;C:\npm\prefix\node_modules\tauri\bin"
