@@ -97,8 +97,10 @@ jobs:
           RUSTUP_UPDATE_ROOT: https://mirrors.ustc.edu.cn/rust-static/rustup
           LIB: D:\a\xls-dsl\xls-dsl\lib
       - uses: tauri-apps/tauri-action@v0
+        if: matrix.platform == 'windows-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LIB: D:\a\xls-dsl\xls-dsl\lib
         with:
           tagName: ${{ github.ref_name }} # This only works if your workflow triggers on new tags.
           releaseName: 'App Name v__VERSION__' # tauri-action replaces \_\_VERSION\_\_ with the app version.
