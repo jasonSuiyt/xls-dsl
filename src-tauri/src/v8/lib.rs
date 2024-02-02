@@ -162,27 +162,32 @@ impl V8Runtime {
 
     fn file_fun(scope: &mut HandleScope<()>, object_template: Local<ObjectTemplate>) {
         let create_file_callback = |scope: &mut HandleScope, args: FunctionCallbackArguments, mut res: ReturnValue| {
-            let i = args.length();
-            if i>0 {
-                let arg = args.get(0);
-                let file = arg.to_rust_string_lossy(scope);
-                let path = Path::new(&file);
-                let dir = path.parent().unwrap();
+            if args.length() != 1{
+                let err_msg = v8::String::new(scope, "参数个数不正确").unwrap().into();
+                scope.throw_exception(err_msg);
+            }
+            let arg = args.get(0);
+            let file = arg.to_rust_string_lossy(scope);
+            let path = Path::new(&file);
+            let dir = path.parent().unwrap();
 
-                match  fs::create_dir_all(dir){
-                    Ok(_) => {
-                        File::create(file).unwrap();
-                    }
-                    Err(e) => {
-                        let msg = v8::String::new(scope, &e.to_string()).unwrap();
-                        let exception = v8::Exception::type_error(scope, msg.into());
-                        scope.throw_exception(exception);
-                    }
+            match  fs::create_dir_all(dir){
+                Ok(_) => {
+                    File::create(file).unwrap();
+                }
+                Err(e) => {
+                    let msg = v8::String::new(scope, &e.to_string()).unwrap();
+                    let exception = v8::Exception::type_error(scope, msg.into());
+                    scope.throw_exception(exception);
                 }
             }
         };
         let append_str_callback = |scope: &mut HandleScope, args: FunctionCallbackArguments, mut res: ReturnValue| {
             let i = args.length();
+            if args.length() !=2 {
+                let err_msg = v8::String::new(scope, "参数个数不正确").unwrap().into();
+                scope.throw_exception(err_msg);
+            }
             if i>1 {
                 let arg1 = args.get(0);
                 let arg2 = args.get(1);
