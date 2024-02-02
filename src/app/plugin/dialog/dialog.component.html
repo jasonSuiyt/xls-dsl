@@ -1,9 +1,9 @@
 <div class="relative z-10"  [style.display]="visble?'block':'none'" aria-labelledby="modal-title"
   role="dialog" aria-modal="true">
-  <div class="fixed inset-0  bg-[rgb(30,30,30)] bg-opacity-90 transition-opacity"></div>
+  <div class="fixed inset-0 backdrop-blur-sm bg-white/30 dark:bg-[rgb(30,30,30)]/30"></div>
   <div class="fixed inset-0 z-10 w-screen h-screen overflow-y-auto flex justify-center items-center dialog-overlay">
     <div #dialog style="width: 500px;" cdkDrag [@openClose]="visble"
-      class="  bg-white text-left  fixed   sm:my-8  dark:bg-[rgb(30,30,30)] rounded-sm shadow-lg shadow-gray-600 dark:shadow-black border-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)]">
+      class="bg-white text-left  fixed   sm:my-8  dark:bg-[rgb(30,30,30)] rounded-sm shadow-lg shadow-gray-600 dark:shadow-black border-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)]">
       <div cdkDragHandle
         class=" cursor-move text-sm px-2 py-2 border-b-[1px] border-solid border-[rgb(220,220,220)] dark:border-[rgb(43,43,43)] flex items-center justify-between">
         <label class=" dark:text-[rgb(189,189,189)] select-none">{{title}}</label>

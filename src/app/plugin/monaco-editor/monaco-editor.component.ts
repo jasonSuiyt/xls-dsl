@@ -63,6 +63,17 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
   onInit(editor: any) {
     this.editor = editor;
     const monaco = (window as any).monaco;
+    monaco.languages.typescript.javascriptDefaults.setModeConfiguration({
+      codeActions: true,
+      completionItems: true,
+      definitions: true,
+      diagnostics: true,
+      documentHighlights: true,
+      documentRangeFormattingEdits: true,
+      signatureHelp: true,
+      rename: true,
+      references: true
+    })
     monaco.languages.typescript.javascriptDefaults.addExtraLib(`
  /**
  * 文件流操作api
