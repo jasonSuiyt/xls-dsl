@@ -5,6 +5,8 @@ import {MqType} from 'src/app/enums/mq-type';
 import {FileInfo} from 'src/app/modal/file-info';
 import {MessageService} from 'src/app/service/message.service';
 import {debounceTime, fromEvent, throttleTime} from 'rxjs';
+import { resolveResource } from '@tauri-apps/api/path';
+import { readTextFile } from '@tauri-apps/api/fs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -60,7 +62,7 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
 
 
 
-  onInit(editor: any) {
+  async onInit(editor: any) {
     this.editor = editor;
     const monaco = (window as any).monaco;
     monaco.languages.typescript.javascriptDefaults.setModeConfiguration({
@@ -74,85 +76,9 @@ export class MonacoEditorComponent implements OnInit, AfterViewInit {
       rename: true,
       references: true
     })
-    monaco.languages.typescript.javascriptDefaults.addExtraLib(`
- /**
- * 文件流操作api
- */
-const fs = {
-
-    /**
-     * 创建文件
-     *
-     * @param {string} filePath 文件地址
-     * @return {void} 返回值描述
-     */
-    create(filePath) {
-
-    },
-
-    /**
-     * 追加文本
-     *
-     * @param {string} filePath 文件地址
-     * @param {string} content  文本
-     * @return {void} 返回值描述
-     */
-    append(filePath, content) {
-
-    },
-
-    /**
-     * 读取xls文件
-     *
-     * @param {string=} filePath 文件地址，可选参数 默认读取选择的文件
-     * @return {Array} 返回值描述
-     */
-    read_xls(filePath) {
-
-    }
-}
-
-
-/**
- * 生成UUID
- *
- * @return {string} 返回值描述
- */
-function uuid() {
-    return "";
-}
-
-
-/**
- * 生成雪花ID方法
- *
- * @return {string} 返回值描述
- */
-function snowid() {
-    return "";
-}
-
-/**
- * MD5编码
- *
- * @param {string} content 文本
- * @return {string} 返回值描述
- */
-function md5(content) {
-    return "";
-}
-
-
-/**
- * 打印
- *
- * @param {string} content 文本
- * @return {void}
- */
-function println(content) {
-}
-
-    `);
+    const resourcePath = await resolveResource('data/extraLib.js')
+    const extraLib = await readTextFile(resourcePath)
+    monaco.languages.typescript.javascriptDefaults.addExtraLib(extraLib);
     monaco.languages.registerCompletionItemProvider('javascript', {
       triggerCharacters: ['.'],
       provideCompletionItems: function (model: any, position: any, context: any, token: any) {
