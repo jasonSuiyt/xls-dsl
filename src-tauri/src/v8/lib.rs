@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use std::error::Error;
 use std::fs;
 use std::fs::File;
-use std::io::Write;
+use std::io::{BufRead, BufReader, Write};
 use std::path::Path;
 use serde_json::Value;
 use serde_v8::Serializable;
@@ -238,10 +238,37 @@ impl V8Runtime {
             res.set(result1);
         };
 
+        let read_txt_lines_callback = |scope: &mut HandleScope, args: FunctionCallbackArguments, mut res: ReturnValue| {
+            // 如果传入路径则读取对应的路径
+            let mut path ;
+            if args.length() == 1{
+                let arg1 = args.get(0).to_rust_string_lossy(scope);
+                let file = Path::new(&arg1);
+                if !file.is_file() || !file.exists(){
+                    let msg = v8::String::new(scope, &format!("The file [{}] not exists", arg1)).unwrap();
+                    let exception = v8::Exception::type_error(scope, msg.into());
+                    scope.throw_exception(exception);
+                    return;
+                }
+                path = arg1;
+            }else {
+                let msg = v8::String::new(scope, "args length must be one").unwrap();
+                let exception = v8::Exception::type_error(scope, msg.into());
+                scope.throw_exception(exception);
+                return;
+            }
+            let file = File::open(path).unwrap();
+            let fin = BufReader::new(file);
+            let lines_res = fin.lines().map(|line|line.unwrap()).collect::<Vec<_>>();
+            let result1 = serde_json::to_value(lines_res).unwrap().to_v8(scope).unwrap();
+            res.set(result1);
+        };
+
         let file = ObjectTemplate::new(scope);
         file.set( v8::String::new(scope, "append").unwrap().into(), FunctionTemplate::new(scope, append_str_callback).into());
         file.set( v8::String::new(scope, "create").unwrap().into(), FunctionTemplate::new(scope, create_file_callback).into());
         file.set( v8::String::new(scope, "read_xls").unwrap().into(), FunctionTemplate::new(scope, read_xls_callback).into());
+        file.set( v8::String::new(scope, "read_txt_lines").unwrap().into(), FunctionTemplate::new(scope, read_txt_lines_callback).into());
 
         let file_name = v8::String::new(scope, "fs").unwrap();
         object_template.set(file_name.into(), file.into());

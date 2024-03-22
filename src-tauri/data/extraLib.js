@@ -32,6 +32,15 @@ const fs = {
      */
     read_xls(filePath) {
 
+    },
+    /**
+     * 读取文件
+     *
+     * @param {string=} filePath 文件地址，可选参数 默认读取选择的文件
+     * @return {Array<string>} 返回值描述
+     */
+    read_txt_lines(filePath) {
+
     }
 }
 
