@@ -35,3 +35,9 @@ v8 = "0.82.0"
 # this feature is used for production builds or when `devPath` points to the filesystem
 # DO NOT REMOVE!!
 custom-protocol = ["tauri/custom-protocol"]
+
+
+[profile.release]
+strip = true
+opt-level = 'z'
+lto = true
