@@ -9,7 +9,7 @@ use std::path::Path;
 use serde_json::Value;
 use serde_v8::Serializable;
 use sonyflake::Sonyflake;
-use v8::{FunctionCallbackArguments, FunctionTemplate, HandleScope, Local, ObjectTemplate, ReturnValue};
+use v8::{FunctionCallbackArguments, FunctionTemplate, HandleScope, Local, Object, ObjectTemplate, ReturnValue};
 use crate::APP;
 use crate::dao::models::RunLog;
 use crate::parse_xls::lib::ParseXls;
@@ -118,13 +118,26 @@ impl V8Runtime {
         let function = |scope: &mut HandleScope, args: FunctionCallbackArguments, _: ReturnValue| {
             let arg = args.get(0);
             if let Some(w) = APP.lock().unwrap().get("window") {
-                // std::thread::sleep(Duration::from_millis(1));
                 if arg.is_string() {
-                    w.emit("println", RunLog::log(arg.to_rust_string_lossy(scope))).unwrap();
-                } else {
-                    if let Ok(res) = serde_v8::from_v8::<Value>(scope, arg.into()) {
-                        w.emit("println", RunLog::log(serde_json::to_string_pretty(&res).unwrap())).unwrap();
+                    let res = arg.to_rust_string_lossy(scope);
+                    match serde_json::from_str::<Value>(&res) {
+                        Ok(res) => {
+                            w.emit("println", RunLog::log(serde_json::to_string_pretty(&res).unwrap())).unwrap();
+                        }
+                        Err(_) => {
+                            w.emit("println", RunLog::log(arg.to_rust_string_lossy(scope))).unwrap();
+                        }
                     }
+                } else {
+                    match serde_v8::from_v8::<Value>(scope, arg.into()) {
+                        Ok(res) => {
+                            w.emit("println", RunLog::log(serde_json::to_string_pretty(&res).unwrap())).unwrap();
+                        }
+                        Err(err) => {
+                            println!("{:#?}", err)
+                        }
+                    }
+
                 }
             }
         };
@@ -260,15 +273,41 @@ impl V8Runtime {
             let file = File::open(path).unwrap();
             let fin = BufReader::new(file);
             let lines_res = fin.lines().map(|line|line.unwrap()).collect::<Vec<_>>();
-            let result1 = serde_json::to_value(lines_res).unwrap().to_v8(scope).unwrap();
+            let result1 = serde_json::to_value(&lines_res).unwrap().to_v8(scope).unwrap();
             res.set(result1);
+        };
+
+
+        let read_txt_callback = |scope: &mut HandleScope, args: FunctionCallbackArguments, mut res: ReturnValue| {
+            // 如果传入路径则读取对应的路径
+            let mut path ;
+            if args.length() == 1{
+                let arg1 = args.get(0).to_rust_string_lossy(scope);
+                let file = Path::new(&arg1);
+                if !file.is_file() || !file.exists(){
+                    let msg = v8::String::new(scope, &format!("The file [{}] not exists", arg1)).unwrap();
+                    let exception = v8::Exception::type_error(scope, msg.into());
+                    scope.throw_exception(exception);
+                    return;
+                }
+                path = arg1;
+            }else {
+                let msg = v8::String::new(scope, "args length must be one").unwrap();
+                let exception = v8::Exception::type_error(scope, msg.into());
+                scope.throw_exception(exception);
+                return;
+            }
+            let lines_res = fs::read_to_string(path).unwrap();
+            let result = serde_json::to_value(&lines_res).unwrap().to_v8(scope).unwrap();
+            res.set(result);
         };
 
         let file = ObjectTemplate::new(scope);
         file.set( v8::String::new(scope, "append").unwrap().into(), FunctionTemplate::new(scope, append_str_callback).into());
         file.set( v8::String::new(scope, "create").unwrap().into(), FunctionTemplate::new(scope, create_file_callback).into());
         file.set( v8::String::new(scope, "read_xls").unwrap().into(), FunctionTemplate::new(scope, read_xls_callback).into());
-        file.set( v8::String::new(scope, "read_txt_lines").unwrap().into(), FunctionTemplate::new(scope, read_txt_lines_callback).into());
+        file.set( v8::String::new(scope, "read_to_line").unwrap().into(), FunctionTemplate::new(scope, read_txt_lines_callback).into());
+        file.set( v8::String::new(scope, "read_to_string").unwrap().into(), FunctionTemplate::new(scope, read_txt_callback).into());
 
         let file_name = v8::String::new(scope, "fs").unwrap();
         object_template.set(file_name.into(), file.into());
@@ -286,6 +325,7 @@ impl V8Runtime {
         res.set(local.into());
     }
 }
+
 
 
 #[cfg(test)]
